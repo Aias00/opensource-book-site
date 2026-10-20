@@ -1,0 +1,1599 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>从零开始学 Java 高并发 · 在线阅读</title>
+<style>
+:root{color-scheme:light;--bg:#faf8f3;--panel:#f1eee6;--fg:#26343d;--muted:#63727a;--accent:#136779;--line:#d8ddd9;--code:#eaeef0;--size:18px}
+:root[data-theme=dark]{color-scheme:dark;--bg:#18232b;--panel:#202e37;--fg:#e1e7e8;--muted:#afbec4;--accent:#7bd2d8;--line:#40515c;--code:#24343e}
+*{box-sizing:border-box}html{scroll-padding-top:85px}body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"PingFang SC",sans-serif;line-height:1.85}a{color:var(--accent);overflow-wrap:anywhere}button,input{font:inherit}button{cursor:pointer;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:5px 12px}button:hover{border-color:var(--accent)}:focus-visible{outline:3px solid var(--accent);outline-offset:3px}.toolbar{position:fixed;top:0;left:0;right:0;height:64px;display:flex;align-items:center;gap:16px;padding:0 24px;background:var(--bg);border-bottom:1px solid var(--line);z-index:5}.brand{font-weight:700;text-decoration:none}.tools{margin-left:auto;display:flex;gap:6px}.skip{position:fixed;top:-100px;z-index:10;background:var(--bg)}.skip:focus{top:8px}#menu{display:none}#sidebar{position:fixed;top:64px;bottom:0;width:300px;overflow:auto;padding:24px;background:var(--panel);border-right:1px solid var(--line)}#sidebar label{font-weight:650;font-size:14px}#search{width:100%;margin:8px 0;padding:9px;border:1px solid var(--line);border-radius:6px;color:var(--fg);background:var(--bg)}#search-status{font-size:13px;color:var(--muted);margin:0 0 10px}nav ul,#results{list-style:none;padding:0}nav ul ul{padding-left:14px}nav li{margin:6px 0}nav a{display:block;text-decoration:none;font-size:14px;line-height:1.6;padding:3px 0}nav a[aria-current=true]{font-weight:750;border-left:3px solid var(--accent);padding-left:9px}#results li{margin:16px 0}#results a{font-weight:650;font-size:14px}#results p{font-size:13px;color:var(--muted);margin:4px 0}main{margin-left:300px;padding:100px max(30px,calc((100vw - 1120px)/2)) 70px;font-size:var(--size);max-width:1600px}.intro{padding:10px 0 48px;border-bottom:1px solid var(--line);margin-bottom:48px}.eyebrow{font-size:14px;color:var(--accent);letter-spacing:.12em}.intro h1{font-size:2.3em;line-height:1.3}.subtitle{font-size:1.2em}.reading-note{color:var(--muted);font-size:.85em}h1,h2,h3{line-height:1.5;scroll-margin-top:85px}main>h1{margin-top:3em;padding-top:1em;border-top:1px solid var(--line);font-size:1.75em}h2{font-size:1.3em;margin-top:2em}h3{font-size:1.15em}p{margin:1em 0}pre{padding:18px;border-radius:8px;background:var(--code);font-size:.82em;line-height:1.65;overflow-x:auto;position:relative}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}p code,li code{background:var(--code);border-radius:3px;padding:2px 4px}table{border-collapse:collapse;width:100%;display:block;overflow-x:auto;font-size:.85em}td,th{border:1px solid var(--line);padding:10px;text-align:left;min-width:100px}th{background:var(--panel)}footer{border-top:1px solid var(--line);margin-top:60px;padding-top:25px;font-size:.85em;color:var(--muted)}.copy{display:block;margin:0 0 8px auto;font-size:12px}.progress{height:3px;position:fixed;top:61px;left:0;right:0;z-index:6;pointer-events:none}#progress{height:100%;background:var(--accent);width:0}
+@media(max-width:900px){.toolbar{padding:0 12px;gap:10px}#menu{display:block}.brand{font-size:14px}#sidebar{display:none;width:min(340px,90vw);z-index:4;box-shadow:12px 0 25px #0002}body.menu-open #sidebar{display:block}main{margin-left:0;padding:90px 22px 50px}.intro h1{font-size:1.9em}.tools button{padding:5px 8px}.tools{gap:4px}}
+@media print{.toolbar,#sidebar,.progress,.copy,#resume{display:none}main{margin:0;padding:0;font-size:12pt}pre{white-space:pre-wrap}body{background:white;color:black}}
+</style>
+</head>
+<body>
+<a class="skip" href="#book">跳到正文</a>
+<header class="toolbar">
+<button id="menu" type="button" aria-controls="sidebar" aria-expanded="false">☰ 目录</button>
+<a class="brand" href="#top">Java 高并发入门</a>
+<div class="tools">
+<button id="smaller" type="button" aria-label="缩小字号">A−</button>
+<button id="larger" type="button" aria-label="放大字号">A+</button>
+<button id="theme" type="button" aria-label="切换明暗主题">明暗</button>
+</div>
+</header>
+<aside id="sidebar" aria-label="阅读导航">
+<label for="search">搜索全书</label>
+<input id="search" type="search" placeholder="例如：线程池、volatile" autocomplete="off">
+<p id="search-status" role="status" aria-live="polite"></p>
+<ul id="results" hidden></ul>
+<nav aria-label="全书目录"><ul>
+<li><a href="#写给第一次学习并发的你"
+id="toc-写给第一次学习并发的你">写给第一次学习并发的你</a>
+<ul>
+<li><a href="#怎样使用这本书"
+id="toc-怎样使用这本书">怎样使用这本书</a></li>
+</ul></li>
+<li><a href="#第-1-章-先搭好能运行的学习环境"
+id="toc-第-1-章-先搭好能运行的学习环境">第 1
+章　先搭好能运行的学习环境</a>
+<ul>
+<li><a href="#你需要的最少-java-知识"
+id="toc-你需要的最少-java-知识">1.1 你需要的最少 Java 知识</a></li>
+<li><a href="#安装与验证" id="toc-安装与验证">1.2 安装与验证</a></li>
+</ul></li>
+<li><a href="#第-2-章-并发高并发与线程到底是什么"
+id="toc-第-2-章-并发高并发与线程到底是什么">第 2
+章　并发、高并发与线程到底是什么</a>
+<ul>
+<li><a href="#餐厅里的三件事" id="toc-餐厅里的三件事">2.1
+餐厅里的三件事</a></li>
+<li><a href="#不共享往往最简单" id="toc-不共享往往最简单">2.2
+不共享，往往最简单</a></li>
+<li><a href="#三个指标别混在一起" id="toc-三个指标别混在一起">2.3
+三个指标，别混在一起</a></li>
+</ul></li>
+<li><a href="#第-3-章-线程的生命周期与合作退出"
+id="toc-第-3-章-线程的生命周期与合作退出">第 3
+章　线程的生命周期与合作退出</a>
+<ul>
+<li><a href="#六种状态" id="toc-六种状态">3.1 六种状态</a></li>
+<li><a href="#sleepwaitjoin-的区别" id="toc-sleepwaitjoin-的区别">3.2
+sleep、wait、join 的区别</a></li>
+<li><a href="#中断是一种请求" id="toc-中断是一种请求">3.3
+中断是一种请求</a></li>
+</ul></li>
+<li><a href="#第-4-章-线程安全的三个基本问题"
+id="toc-第-4-章-线程安全的三个基本问题">第 4
+章　线程安全的三个基本问题</a>
+<ul>
+<li><a href="#原子性整体不能被拆开观察"
+id="toc-原子性整体不能被拆开观察">4.1
+原子性：整体不能被拆开观察</a></li>
+<li><a href="#可见性别人能否可靠地看到更新"
+id="toc-可见性别人能否可靠地看到更新">4.2
+可见性：别人能否可靠地看到更新</a></li>
+<li><a href="#有序性与-happens-before"
+id="toc-有序性与-happens-before">4.3 有序性与 happens-before</a></li>
+<li><a href="#volatile-的能力边界" id="toc-volatile-的能力边界">4.4
+volatile 的能力边界</a></li>
+</ul></li>
+<li><a href="#第-5-章-synchronized先学会保护一条业务规则"
+id="toc-第-5-章-synchronized先学会保护一条业务规则">第 5
+章　synchronized：先学会保护一条业务规则</a>
+<ul>
+<li><a href="#锁保护的是约束" id="toc-锁保护的是约束">5.1
+锁保护的是约束</a></li>
+<li><a href="#为什么它还能提供可见性"
+id="toc-为什么它还能提供可见性">5.2 为什么它还能提供可见性</a></li>
+<li><a href="#合理的锁范围" id="toc-合理的锁范围">5.3
+合理的锁范围</a></li>
+</ul></li>
+<li><a href="#第-6-章-显式锁条件队列与死锁"
+id="toc-第-6-章-显式锁条件队列与死锁">第 6
+章　显式锁、条件队列与死锁</a>
+<ul>
+<li><a href="#什么时候用-reentrantlock"
+id="toc-什么时候用-reentrantlock">6.1 什么时候用 ReentrantLock</a></li>
+<li><a href="#等待条件必须用-while" id="toc-等待条件必须用-while">6.2
+等待条件必须用 while</a></li>
+<li><a href="#死锁与饥饿活锁" id="toc-死锁与饥饿活锁">6.3
+死锁与饥饿、活锁</a></li>
+</ul></li>
+<li><a href="#第-7-章-cas原子类与高竞争计数"
+id="toc-第-7-章-cas原子类与高竞争计数">第 7
+章　CAS、原子类与高竞争计数</a>
+<ul>
+<li><a href="#cas-是带条件的更新" id="toc-cas-是带条件的更新">7.1 CAS
+是带条件的更新</a></li>
+<li><a href="#aba-为什么麻烦" id="toc-aba-为什么麻烦">7.2 ABA
+为什么麻烦</a></li>
+<li><a href="#atomiclong-与-longadder"
+id="toc-atomiclong-与-longadder">7.3 AtomicLong 与 LongAdder</a></li>
+</ul></li>
+<li><a href="#第-8-章-并发容器与任务协作工具"
+id="toc-第-8-章-并发容器与任务协作工具">第 8
+章　并发容器与任务协作工具</a>
+<ul>
+<li><a href="#concurrenthashmap-不等于业务自动原子"
+id="toc-concurrenthashmap-不等于业务自动原子">8.1 ConcurrentHashMap
+不等于业务自动原子</a></li>
+<li><a href="#三种常见容器怎么选" id="toc-三种常见容器怎么选">8.2
+三种常见容器怎么选</a></li>
+<li><a href="#countdownlatchcyclicbarriersemaphore"
+id="toc-countdownlatchcyclicbarriersemaphore">8.3
+CountDownLatch、CyclicBarrier、Semaphore</a></li>
+</ul></li>
+<li><a href="#第-9-章-线程池面试重点也是生产事故高发区"
+id="toc-第-9-章-线程池面试重点也是生产事故高发区">第 9
+章　线程池：面试重点也是生产事故高发区</a>
+<ul>
+<li><a href="#为什么复用线程" id="toc-为什么复用线程">9.1
+为什么复用线程</a></li>
+<li><a href="#threadpoolexecutor-的七个参数"
+id="toc-threadpoolexecutor-的七个参数">9.2 ThreadPoolExecutor
+的七个参数</a></li>
+<li><a href="#提交顺序必须真正理解" id="toc-提交顺序必须真正理解">9.3
+提交顺序必须真正理解</a></li>
+<li><a href="#拒绝策略是业务决策" id="toc-拒绝策略是业务决策">9.4
+拒绝策略是业务决策</a></li>
+<li><a href="#怎样估算线程数" id="toc-怎样估算线程数">9.5
+怎样估算线程数</a></li>
+<li><a href="#正确关闭" id="toc-正确关闭">9.6 正确关闭</a></li>
+</ul></li>
+<li><a href="#第-10-章-future-与-completablefuture组织异步结果"
+id="toc-第-10-章-future-与-completablefuture组织异步结果">第 10
+章　Future 与 CompletableFuture：组织异步结果</a>
+<ul>
+<li><a href="#异步不是自动更快" id="toc-异步不是自动更快">10.1
+异步不是自动更快</a></li>
+<li><a href="#组合操作读法" id="toc-组合操作读法">10.2
+组合操作读法</a></li>
+<li><a href="#失败处理与超时" id="toc-失败处理与超时">10.3
+失败处理与超时</a></li>
+</ul></li>
+<li><a href="#第-11-章-threadlocal不可变性与安全发布"
+id="toc-第-11-章-threadlocal不可变性与安全发布">第 11
+章　ThreadLocal、不可变性与安全发布</a>
+<ul>
+<li><a href="#threadlocal-是按线程存放数据"
+id="toc-threadlocal-是按线程存放数据">11.1 ThreadLocal
+是按线程存放数据</a></li>
+<li><a href="#final-为什么不等于不可变"
+id="toc-final-为什么不等于不可变">11.2 final 为什么不等于不可变</a></li>
+<li><a href="#双重检查单例为什么要-volatile"
+id="toc-双重检查单例为什么要-volatile">11.3 双重检查单例为什么要
+volatile</a></li>
+</ul></li>
+<li><a href="#第-12-章-虚拟线程更轻的等待不是无限容量"
+id="toc-第-12-章-虚拟线程更轻的等待不是无限容量">第 12
+章　虚拟线程：更轻的等待，不是无限容量</a>
+<ul>
+<li><a href="#它改变了哪一层" id="toc-它改变了哪一层">12.1
+它改变了哪一层</a></li>
+<li><a href="#jdk-21-与-24-的重要差异"
+id="toc-jdk-21-与-24-的重要差异">12.2 JDK 21 与 24 的重要差异</a></li>
+</ul></li>
+<li><a href="#第-13-章-从多线程走向系统高并发"
+id="toc-第-13-章-从多线程走向系统高并发">第 13
+章　从多线程走向系统高并发</a>
+<ul>
+<li><a href="#jvm-内的锁管不到其他进程"
+id="toc-jvm-内的锁管不到其他进程">13.1 JVM 内的锁管不到其他进程</a></li>
+<li><a href="#限流背压熔断与降级" id="toc-限流背压熔断与降级">13.2
+限流、背压、熔断与降级</a></li>
+<li><a href="#幂等与重试" id="toc-幂等与重试">13.3 幂等与重试</a></li>
+<li><a href="#小案例一个查询订单接口"
+id="toc-小案例一个查询订单接口">13.4 小案例：一个查询订单接口</a></li>
+</ul></li>
+<li><a href="#第-14-章-排障从现象回到证据"
+id="toc-第-14-章-排障从现象回到证据">第 14 章　排障：从现象回到证据</a>
+<ul>
+<li><a href="#cpu-高与请求慢不是同一问题"
+id="toc-cpu-高与请求慢不是同一问题">14.1 CPU
+高与请求慢不是同一问题</a></li>
+<li><a href="#基本工具" id="toc-基本工具">14.2 基本工具</a></li>
+<li><a href="#读栈时问什么" id="toc-读栈时问什么">14.3
+读栈时问什么</a></li>
+<li><a href="#怎样做有意义的压测" id="toc-怎样做有意义的压测">14.4
+怎样做有意义的压测</a></li>
+</ul></li>
+<li><a href="#第-15-章-五个完整实验运行观察解释"
+id="toc-第-15-章-五个完整实验运行观察解释">第 15
+章　五个完整实验：运行、观察、解释</a>
+<ul>
+<li><a href="#实验一丢失更新与原子计数"
+id="toc-实验一丢失更新与原子计数">实验一：丢失更新与原子计数</a></li>
+<li><a href="#实验二库存不能卖成负数"
+id="toc-实验二库存不能卖成负数">实验二：库存不能卖成负数</a></li>
+<li><a href="#实验三稳定复现线程池拒绝"
+id="toc-实验三稳定复现线程池拒绝">实验三：稳定复现线程池拒绝</a></li>
+<li><a href="#实验四有界队列生产者消费者"
+id="toc-实验四有界队列生产者消费者">实验四：有界队列生产者消费者</a></li>
+<li><a href="#实验五虚拟线程与资源上限"
+id="toc-实验五虚拟线程与资源上限">实验五：虚拟线程与资源上限</a></li>
+</ul></li>
+<li><a href="#第-16-章-高频主题面试问答与追问"
+id="toc-第-16-章-高频主题面试问答与追问">第 16
+章　高频主题面试问答与追问</a>
+<ul>
+<li><a href="#基础与内存模型" id="toc-基础与内存模型">16.1
+基础与内存模型</a></li>
+<li><a href="#锁与协作" id="toc-锁与协作">16.2 锁与协作</a></li>
+<li><a href="#原子类容器和线程池" id="toc-原子类容器和线程池">16.3
+原子类、容器和线程池</a></li>
+<li><a href="#现代并发与系统设计" id="toc-现代并发与系统设计">16.4
+现代并发与系统设计</a></li>
+</ul></li>
+<li><a href="#第-17-章-场景题与代码审查训练"
+id="toc-第-17-章-场景题与代码审查训练">第 17
+章　场景题与代码审查训练</a>
+<ul>
+<li><a href="#场景一查完缓存再写入仍然重复加载"
+id="toc-场景一查完缓存再写入仍然重复加载">场景一：查完缓存再写入，仍然重复加载</a></li>
+<li><a href="#场景二线程池增加到-500-后数据库更慢"
+id="toc-场景二线程池增加到-500-后数据库更慢">场景二：线程池增加到 500
+后数据库更慢</a></li>
+<li><a href="#场景三两个接口查询可以并行吗"
+id="toc-场景三两个接口查询可以并行吗">场景三：两个接口查询可以并行吗</a></li>
+<li><a href="#场景四读多写少一定用读写锁吗"
+id="toc-场景四读多写少一定用读写锁吗">场景四：读多写少一定用读写锁吗</a></li>
+<li><a href="#场景五找出这段代码的问题"
+id="toc-场景五找出这段代码的问题">场景五：找出这段代码的问题</a></li>
+<li><a href="#一次-15-分钟模拟面试" id="toc-一次-15-分钟模拟面试">一次
+15 分钟模拟面试</a></li>
+</ul></li>
+<li><a href="#第-18-章-四周学习计划与速查表"
+id="toc-第-18-章-四周学习计划与速查表">第 18
+章　四周学习计划与速查表</a>
+<ul>
+<li><a href="#第一周能解释为什么错"
+id="toc-第一周能解释为什么错">第一周：能解释为什么错</a></li>
+<li><a href="#第二周能选对工具"
+id="toc-第二周能选对工具">第二周：能选对工具</a></li>
+<li><a href="#第三周能控制任务与资源"
+id="toc-第三周能控制任务与资源">第三周：能控制任务与资源</a></li>
+<li><a href="#第四周能把知识放进系统"
+id="toc-第四周能把知识放进系统">第四周：能把知识放进系统</a></li>
+<li><a href="#工具选型速查" id="toc-工具选型速查">工具选型速查</a></li>
+<li><a href="#面试前最后检查"
+id="toc-面试前最后检查">面试前最后检查</a></li>
+</ul></li>
+<li><a href="#附录-a-容易误记的说法" id="toc-附录-a-容易误记的说法">附录
+A　容易误记的说法</a></li>
+<li><a href="#附录-b-术语小词典" id="toc-附录-b-术语小词典">附录
+B　术语小词典</a></li>
+<li><a href="#附录-c-进阶面试第一站aqs-与读写锁"
+id="toc-附录-c-进阶面试第一站aqs-与读写锁">附录 C　进阶面试第一站：AQS
+与读写锁</a>
+<ul>
+<li><a href="#aqs-先理解框架职责" id="toc-aqs-先理解框架职责">AQS
+先理解框架职责</a></li>
+<li><a href="#parkunpark-与等待条件"
+id="toc-parkunpark-与等待条件">park/unpark 与等待条件</a></li>
+<li><a href="#读写锁适合哪种问题"
+id="toc-读写锁适合哪种问题">读写锁适合哪种问题</a></li>
+</ul></li>
+<li><a href="#附录-d-参考资料与检索说明"
+id="toc-附录-d-参考资料与检索说明">附录 D　参考资料与检索说明</a></li>
+</ul></nav>
+</aside>
+<main id="book" tabindex="-1">
+<section class="intro" id="top">
+<p class="eyebrow">零基础学习书 · Java 21</p>
+<h1>从零开始学 Java 高并发</h1>
+<p class="subtitle">用实验理解原理，用场景准备面试</p>
+<p>18 章讲解 · 5 个完整实验 · 26 道面试问答</p>
+<p><a href="book.epub" download>下载 EPUB</a> · <a href="study.zip" download>下载配套源码</a> · <a href="../">Apache 开源书籍</a></p>
+<p class="reading-note">从目录选择章节，或搜索全书。阅读位置与字号保存在当前浏览器。</p>
+<button id="resume" type="button" hidden>继续上次阅读</button>
+</section>
+<h1 id="写给第一次学习并发的你">写给第一次学习并发的你</h1>
+<p>你也许见过这样的招聘要求：“熟悉多线程、JUC、线程池，理解高并发。”这些词像一堵墙。本书的目标是把墙拆成台阶：先知道程序为什么会出错，再学会选择工具，最后练习解释自己的选择。</p>
+<p><strong>并发知识不是背出几个类名，而是回答三个问题：哪些状态被共享？哪些操作必须作为一个整体完成？任务和资源怎样受到限制？</strong>
+学到后面，仍然请反复问这三个问题。</p>
+<p>本书面向能读懂变量、方法、循环和类的初学者。如果你完全没有写过
+Java，先完成第 1 章，再开始实验。你不需要先学完 JVM
+源码，也不需要一上来理解汇编。</p>
+<p>正文分成四段：第 1—4 章打基础，第 5—10 章学习工具，第 11—14
+章连接真实系统，第 15—18 章集中实验、面试和复习。第一次读不必记忆全部
+API；先运行实验，看到现象，再回来看解释。</p>
+<p>本书使用 <strong>JDK 21</strong> 作为代码基线。Java 8
+常见的线程、锁、原子类、线程池仍是核心；虚拟线程示例需要 Java 21。涉及
+Java 24 的变化会明确标出。JDK 的实现细节可能变化，优先记住规范与 API
+保证，不把某个版本的内部代码当成永恒规则。</p>
+<p>资料以 Java 语言规范、Oracle API 文档和 OpenJDK JEP
+为主要依据，参考资料集中在书末，正文用“资料
+R1”等编号指向来源。这是学习与面试准备书，不宣称覆盖所有公司的试题，也不提供未经来源支持的“出现频率排名”。</p>
+<h2 id="怎样使用这本书">怎样使用这本书</h2>
+<p>每次学习控制在 40—60
+分钟：读一小节，运行一个例子，用自己的话解释一次。练习中的错误输出不一定每次出现；并发调度没有义务按你期待的顺序发生。“运行一百次没问题”不等于证明线程安全。</p>
+<p>面试回答建议用四步：先说结论，再讲机制，然后给例子，最后说明适用条件。比如回答
+volatile：它能为读写提供可见性与相关的顺序保证，但不能把自增变成原子操作；共享计数可以用原子类，多个字段共同维护约束时通常要用锁。</p>
+<h1 id="第-1-章-先搭好能运行的学习环境">第 1
+章　先搭好能运行的学习环境</h1>
+<h2 id="你需要的最少-java-知识">1.1 你需要的最少 Java 知识</h2>
+<p>变量保存值，方法组织动作，类描述数据和行为。对象是类创建出来的实例。<code>new Counter()</code>
+会创建对象；两个变量可以指向同一个对象，因此两个线程也可能操作同一个对象。</p>
+<p><code>int n = 0</code> 表示整数变量。<code>n++</code>
+看起来是一句，含义却包含读取旧值、计算新值和写回。<code>static</code>
+成员属于类，在同一个类加载器所定义的这个类的范围内共享；它并不会自动获得线程安全。</p>
+<p>异常表示操作失败。<code>try</code> 放正常流程，<code>catch</code>
+处理异常，<code>finally</code> 执行清理。学习锁时，你会经常看到在
+<code>finally</code> 中释放锁，因为中途抛异常也不能把锁永远占住。</p>
+<p>接口描述可以做什么；<code>Runnable</code> 表示一个没有返回值、且
+<code>run</code> 方法不声明受检异常的任务。Lambda
+<code>() -&gt; System.out.println("你好")</code>
+可以看作一段稍后执行的行为。先能读懂，不必马上研究语言设计。</p>
+<h2 id="安装与验证">1.2 安装与验证</h2>
+<p>安装一个可信发行版的 JDK 21，例如 Eclipse Temurin 21。确保安装的是
+JDK，它同时包含运行器 <code>java</code> 和编译器
+<code>javac</code>。在终端执行：</p>
+<pre class="sh"><code>java -version
+javac -version</code></pre>
+<p>两者都应显示 21
+或兼容的更高版本。若只安装了运行环境、命令不存在，或两者主版本不同，先修正
+PATH 和 JAVA_HOME。不要在尚未确认版本时调试虚拟线程代码。</p>
+<p>新建 <code>Hello.java</code>，注意文件名与公开类名完全一致：</p>
+<pre class="java"><code>public class Hello {
+    public static void main(String[] args) throws Exception {
+        Thread worker = new Thread(() -&gt;
+            System.out.println(&quot;工作线程：&quot; + Thread.currentThread().getName()));
+        worker.start();
+        worker.join();
+        System.out.println(&quot;主线程：工作完成&quot;);
+    }
+}</code></pre>
+<p>运行：</p>
+<pre class="sh"><code>javac -encoding UTF-8 Hello.java
+java Hello</code></pre>
+<p><code>start()</code> 请求启动新线程；<code>join()</code>
+等待它结束。如果直接调用
+<code>worker.run()</code>，只是当前线程执行一个普通方法。主线程通过
+<code>join()</code>
+确认子线程已经结束，再继续打印；这比“随便睡一秒，估计它结束了”可靠得多。</p>
+<p><strong>自测：</strong> 删除 <code>join()</code>
+后，最后一句是否仍一定最后打印？答案是否定的。线程启动先后不能保证所有动作的完成先后。</p>
+<h1 id="第-2-章-并发高并发与线程到底是什么">第 2
+章　并发、高并发与线程到底是什么</h1>
+<h2 id="餐厅里的三件事">2.1 餐厅里的三件事</h2>
+<p>一个厨师交替处理几张订单，是并发：多个任务的执行过程在时间上交错。多个厨师同时炒菜，是并行：某个时刻真的在同时执行。很多客人一起下单，是高并发需求：系统需要在重叠的时间段内处理很多请求。</p>
+<p>三者有关，但不同。单核 CPU
+可以通过切换实现并发；多核让并行成为可能。一个服务可以用异步 I/O
+处理很多连接，而不为每个连接安排一个长期占用的操作系统线程。线程数不是高并发能力的成绩单。</p>
+<p>进程通常是资源隔离的基本单位，线程是进程内的执行路径。Java
+线程有各自的方法调用栈，但可以访问同一堆里的对象。共享对象带来协作，也带来冲突。</p>
+<h2 id="不共享往往最简单">2.2 不共享，往往最简单</h2>
+<p>假设每个请求都创建自己的局部
+<code>ArrayList</code>，不把它交给其他线程，那么通常不需要为这份列表加锁。局部变量如果保存了共享对象的引用，该对象仍可能被多个线程访问；“局部变量都线程安全”是过度概括。</p>
+<p>线程安全的常见路线依次是：避免共享；共享不可变对象；使用已经封装好并发控制的类；确有必要再自行用锁维护约束。不可变对象要求构造完成后其可观察状态不再变化，也要避免把内部可变对象直接暴露出去。只有
+<code>final List</code> 并不能阻止列表内容被修改。</p>
+<h2 id="三个指标别混在一起">2.3 三个指标，别混在一起</h2>
+<p>吞吐量是每秒完成多少请求，常用 QPS 表示。延迟是单个请求耗时，P99
+表示约 99%
+的观测请求耗时不超过该数值。并发量是在系统中同时尚未完成的任务数。</p>
+<p>在稳定系统、同一统计边界、长期平均的条件下，Little
+定律给出：平均系统内请求数 ≈ 到达率 × 平均停留时间。假设每秒处理 200
+个请求、平均每个停留 0.1 秒，平均约有 20
+个请求处于处理中。这个估算不是容量保证，也不能把 P99
+直接代入当作平均值。</p>
+<p><strong>本章面试练习：</strong> 为什么增加线程可能更慢？因为 CPU
+核数、锁竞争、上下文切换、内存和下游容量都有成本；线程增加不能创造数据库连接和
+CPU 算力。</p>
+<h1 id="第-3-章-线程的生命周期与合作退出">第 3
+章　线程的生命周期与合作退出</h1>
+<h2 id="六种状态">3.1 六种状态</h2>
+<p>Java 的 <code>Thread.State</code>
+有六种：NEW、RUNNABLE、BLOCKED、WAITING、TIMED_WAITING、TERMINATED。资料
+R2 对并发包作整体介绍，具体线程状态以 <code>Thread.State</code> API
+为准。</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>状态</th>
+<th>初学者可用的理解</th>
+<th>常见触发</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NEW</td>
+<td>创建了，尚未启动</td>
+<td><code>new Thread(...)</code></td>
+</tr>
+<tr>
+<td>RUNNABLE</td>
+<td>可运行，包含正在执行或等待系统调度</td>
+<td>已启动且未进入其他 Java 状态</td>
+</tr>
+<tr>
+<td>BLOCKED</td>
+<td>等待进入某个内置监视器</td>
+<td>竞争 <code>synchronized</code></td>
+</tr>
+<tr>
+<td>WAITING</td>
+<td>无指定超时地等待</td>
+<td><code>wait()</code>、<code>join()</code>、<code>park()</code></td>
+</tr>
+<tr>
+<td>TIMED_WAITING</td>
+<td>有时间限制地等待</td>
+<td><code>sleep</code>、带超时的等待</td>
+</tr>
+<tr>
+<td>TERMINATED</td>
+<td>执行结束</td>
+<td>正常返回或未捕获异常</td>
+</tr>
+</tbody>
+</table>
+<p><code>ReentrantLock</code> 竞争中停放的线程常显示 WAITING，而不是
+BLOCKED。RUNNABLE 也不能直接解读成“正在吃满 CPU”；具体 I/O
+和运行时实现会影响观测。状态快照只是线索。</p>
+<h2 id="sleepwaitjoin-的区别">3.2 sleep、wait、join 的区别</h2>
+<p><code>Thread.sleep</code>
+让当前线程暂时停止执行，不会释放已持有的监视器锁。<code>obj.wait()</code>
+必须在拥有 <code>obj</code>
+监视器时调用，会释放这个对象的监视器并等待通知、超时或中断；它不会释放你持有的其他锁。返回前还要重新取得该监视器。</p>
+<p><code>join()</code> 用来等待目标线程结束。不要靠 <code>sleep()</code>
+建立先后关系；时间过去了，不代表其他线程完成了，也不提供你需要的通用共享状态同步协议。</p>
+<h2 id="中断是一种请求">3.3 中断是一种请求</h2>
+<p><code>interrupt()</code>
+通常表示“请尽快停止或改变当前工作”，不是强行杀死线程。任务需要检查中断标记，或者调用会响应中断的阻塞方法。</p>
+<pre class="java"><code>while (!Thread.currentThread().isInterrupted()) {
+    // 做一小段可以结束的工作
+}</code></pre>
+<p><code>sleep</code>、<code>wait</code>、<code>join</code> 等方法在抛出
+<code>InterruptedException</code>
+时会清除中断状态。如果当前层不能处理，通常选择向上抛出；若接口不允许抛出，恢复标记并结束当前任务：</p>
+<pre class="java"><code>try {
+    Thread.sleep(100);
+} catch (InterruptedException e) {
+    Thread.currentThread().interrupt();
+    return;
+}</code></pre>
+<p><code>Thread.interrupted()</code>
+查询并清除<strong>当前线程</strong>的中断标记；<code>isInterrupted()</code>
+查询目标线程的标记而不清除。不要把捕获异常后继续无限循环当作“处理了中断”。</p>
+<p><strong>练习：</strong> 编写一个每隔 100
+毫秒执行一次工作的线程，主线程中断它，再
+<code>join()</code>。成功标准是工作线程及时退出、进程自然结束；不要求它恰好打印固定次数。</p>
+<h1 id="第-4-章-线程安全的三个基本问题">第 4
+章　线程安全的三个基本问题</h1>
+<h2 id="原子性整体不能被拆开观察">4.1 原子性：整体不能被拆开观察</h2>
+<p>两人同时更新库存。库存是 1，甲读到 1，乙也读到 1；甲写 0，乙也写
+0，结果两个订单都以为自己买到了最后一件商品。</p>
+<p><code>count++</code> 也有同样问题。即使读写一个 <code>int</code>
+本身是原子的，读—改—写这个复合操作仍然不是原子的。原子性必须针对“哪个操作或业务步骤”来讨论。</p>
+<h2 id="可见性别人能否可靠地看到更新">4.2
+可见性：别人能否可靠地看到更新</h2>
+<p>一个线程更新停止标志，另一个线程持续读取。如果没有正确同步，程序不能假定读者必然及时观察到更新。问题不只是“CPU
+缓存没刷新”这一句口诀；编译器与处理器优化也受内存模型约束。应使用规范规定的同步机制建立保证。</p>
+<h2 id="有序性与-happens-before">4.3 有序性与 happens-before</h2>
+<p>Java 内存模型 JMM 描述多线程读写可见结果的规则，不是 JVM
+内存区域图。happens-before 是规范中的顺序关系：若 A happens-before B，则
+A 的相关效果对 B
+可见，并受其规定的顺序约束；这不要求所有机器指令按源码原样串行执行。</p>
+<p>最常用的规则如下，详见资料 R1 的 17.4.5：</p>
+<ul>
+<li>同一线程中，前面的动作 happens-before 后面的动作。</li>
+<li>对同一监视器的解锁 happens-before 后续对它的加锁。</li>
+<li>对同一 volatile 字段的写 happens-before 后续对它的读。</li>
+<li>调用线程的 <code>start()</code> happens-before
+被启动线程中的动作。</li>
+<li>一个线程中的所有动作 happens-before 其他线程成功从对它的
+<code>join()</code> 返回。</li>
+<li>关系可以传递：A 到 B、B 到 C，则 A 到 C。</li>
+</ul>
+<p>可以把这些规则想成可靠的交接手续。你不仅需要把文件写完，还需要用正确方式把“文件已经写完”这件事交给接收者。</p>
+<h2 id="volatile-的能力边界">4.4 volatile 的能力边界</h2>
+<pre class="java"><code>private volatile boolean stopping;</code></pre>
+<p>这个字段适合表达独立的状态标记。写入 <code>true</code>
+的线程与之后读到相应状态的线程之间可以建立所需的可见性关系。但
+<code>volatile int count; count++;</code>
+仍可能丢失更新，因为它没有排除两个线程交错执行整个自增。</p>
+<p>volatile 也可以用于发布：先准备数据，再写 volatile
+标记，读者观察标记后再读数据。协议必须完整；发布后继续无同步地修改同一份数据，仍可能产生竞争。</p>
+<p><strong>面试回答示范：</strong> “volatile
+解决单个字段读写的可见性和相关顺序问题，不能为复合业务操作提供互斥。独立停止标志可以用它；账户余额与流水一起变更，需要锁或事务等更完整的协调。”</p>
+<h1 id="第-5-章-synchronized先学会保护一条业务规则">第 5
+章　synchronized：先学会保护一条业务规则</h1>
+<h2 id="锁保护的是约束">5.1 锁保护的是约束</h2>
+<p>临界区是需要按约定互斥执行的代码。锁对象好比卫生间钥匙：只有持有同一把钥匙的人才彼此排队。两个不同对象上的锁，不能保护同一份共享数据。</p>
+<pre class="java"><code>final class Stock {
+    private int remaining = 1;
+
+    public synchronized boolean buy() {
+        if (remaining &lt;= 0) return false;
+        remaining--;
+        return true;
+    }
+}</code></pre>
+<p>同一个 <code>Stock</code> 对象的 <code>buy()</code>
+在同一个实例监视器上互斥。检查库存和扣减库存在一起执行，业务约束才成立。如果把检查和扣减分别放到两个同步方法里，再由调用者分两次调用，中间仍可插入其他线程。</p>
+<p>实例同步方法锁住 <code>this</code>；静态同步方法锁住对应的
+<code>Class</code>
+对象；同步代码块锁住括号中的对象。静态方法和实例方法不会因为都写了
+synchronized 就自动互斥。</p>
+<h2 id="为什么它还能提供可见性">5.2 为什么它还能提供可见性</h2>
+<p>锁不只是让人排队。对同一监视器的解锁与后续加锁之间有 happens-before
+关系，因此遵循同一锁协议的访问者能获得可见性保证。若写入时加锁、读取时完全绕开协议，不能笼统声称“已经用了锁，所以一定安全”。</p>
+<p>synchronized
+可重入：同一线程可以再次进入它已经持有的监视器。正常退出同步块或异常退出时都会释放相应监视器。可重入不代表能避免多锁死锁。</p>
+<h2 id="合理的锁范围">5.3 合理的锁范围</h2>
+<p>锁太小可能没覆盖完整约束；锁太大可能把网络请求、磁盘等待也串行化。一个实用原则是：在锁内读取或修改真正共享的状态，在锁外完成能独立进行的耗时工作，同时检查这样拆分是否改变业务语义。</p>
+<p>不要把字符串常量、装箱整数等可能被意外复用的对象作为私有锁。更清楚的写法是
+<code>private final Object lock = new Object();</code>，并统一使用它。</p>
+<p><strong>版本提醒：</strong>
+面试常出现“偏向锁→轻量级锁→重量级锁”。这是特定 HotSpot
+历史实现的学习线索，不是 Java 规范承诺的固定流程。偏向锁已在较新 JDK
+中退出常规使用；先讲互斥、可重入、可见性，再在明确版本的前提下谈实现。</p>
+<h1 id="第-6-章-显式锁条件队列与死锁">第 6
+章　显式锁、条件队列与死锁</h1>
+<h2 id="什么时候用-reentrantlock">6.1 什么时候用 ReentrantLock</h2>
+<p>当你需要可中断地获取锁、尝试获取锁、限时等待锁，或多个条件队列时，显式锁更方便。普通
+<code>lock()</code> 的获取过程不按 <code>lockInterruptibly()</code>
+那样响应中断。</p>
+<pre class="java"><code>lock.lock();
+try {
+    // 访问由这把锁保护的数据
+} finally {
+    lock.unlock();
+}</code></pre>
+<p>使用带超时的 <code>tryLock</code> 时，只有获取成功才执行
+<code>unlock</code>。公平锁倾向按等待顺序授予锁，但会有吞吐成本，也不保证操作系统调度公平；无参
+<code>tryLock()</code>
+还允许插队。不要把公平理解成严格的全局执行顺序。</p>
+<h2 id="等待条件必须用-while">6.2 等待条件必须用 while</h2>
+<p>生产者在队列满时等待，消费者在队列空时等待。条件队列提供“暂时让出锁，等状态可能变化后再试”的能力。</p>
+<pre class="java"><code>lock.lock();
+try {
+    while (queue.isEmpty()) {
+        notEmpty.await();
+    }
+    return queue.remove();
+} finally {
+    lock.unlock();
+}</code></pre>
+<p><code>await()</code> 会释放关联锁，返回之前重新取得锁。用 while
+的原因有两个：允许虚假唤醒；被唤醒到重新获得锁之间，条件也可能被别人改变。<code>signal()</code>
+只是让等待者有机会继续竞争，不是立即把锁转交过去。修改状态和发信号应遵守同一把锁的协议。资料
+R4 提供了完整的条件队列示例。</p>
+<p>初学阶段，生产者消费者优先使用
+<code>BlockingQueue</code>，先理解它解决了什么，再考虑自己写条件队列。</p>
+<h2 id="死锁与饥饿活锁">6.3 死锁与饥饿、活锁</h2>
+<p>甲持有 A 等 B，乙持有 B 等
+A，就是典型死锁。常见必要条件为互斥、持有并等待、不可强制剥夺、循环等待。工程中最容易实施的预防方式是统一加锁顺序，例如总是先锁较小账户编号，再锁较大编号。</p>
+<p>超时 <code>tryLock</code>
+能帮助退出等待，但失败后必须回滚已取得资源，避免忙于重试且没有进展。两个线程不停互相让步可能形成活锁；某个线程长期拿不到资源是饥饿。</p>
+<p>面试场景：“转账锁住两个账户怎么办？”先说明所有路径按稳定顺序加锁，不能只修一个方法。若排序键不唯一，还要处理相等情况；使用
+<code>identityHashCode</code> 排序时也不能忽略哈希冲突。</p>
+<h1 id="第-7-章-cas原子类与高竞争计数">第 7
+章　CAS、原子类与高竞争计数</h1>
+<h2 id="cas-是带条件的更新">7.1 CAS 是带条件的更新</h2>
+<p>CAS
+可以理解为：如果当前位置仍是我预期的旧值，就把它换成新值；否则失败。它允许竞争者检测“我读取以后有没有发生冲突”，常通过重试完成更新。</p>
+<pre class="java"><code>AtomicInteger count = new AtomicInteger();
+count.incrementAndGet();</code></pre>
+<p>这次自增是原子操作。实现细节不应简单概括成“原子类完全无锁、一定更快”；具体操作、实现和竞争程度都重要。大量线程不断失败并重试，会消耗
+CPU。</p>
+<h2 id="aba-为什么麻烦">7.2 ABA 为什么麻烦</h2>
+<p>你看到值是 A，别人把它改成 B 又改回 A，之后你比较发现仍是
+A，无法识别中间发生过变化。某些基于节点身份的算法会因此出错。<code>AtomicStampedReference</code>
+用引用加版本戳帮助识别变化，但需要调用者正确维护版本，不能神奇地修复全部生命周期问题。</p>
+<p>更新函数可能因竞争被重复计算。传给 <code>updateAndGet</code> 等 API
+的函数应没有需要“恰好一次”的外部副作用；不要在里面发送扣款请求。</p>
+<h2 id="atomiclong-与-longadder">7.3 AtomicLong 与 LongAdder</h2>
+<p><code>AtomicLong</code>
+适合需要单个计数值的原子更新、比较与决策。<code>LongAdder</code>
+在竞争激烈的统计计数场景把更新分散到多个位置，读取时汇总，常有更好的吞吐，但占用更多空间。</p>
+<p><code>LongAdder.sum()</code>
+不是对并发更新的原子快照。用它统计访问次数通常合适；用它执行“若总数小于
+100
+就扣减名额”的严格业务条件通常不合适。正确性首先决定选型，性能其次。</p>
+<p><strong>自测：</strong> 两个 <code>AtomicInteger</code>
+分别保存余额和总资产，能保证它们一起变动吗？不能。每个变量自己的原子性不自动组成跨变量事务。</p>
+<h1 id="第-8-章-并发容器与任务协作工具">第 8
+章　并发容器与任务协作工具</h1>
+<h2 id="concurrenthashmap-不等于业务自动原子">8.1 ConcurrentHashMap
+不等于业务自动原子</h2>
+<p>普通 <code>HashMap</code>
+不支持无外部同步的并发修改。<code>ConcurrentHashMap</code>
+提供并发访问能力，不允许 null 键和值，并提供
+<code>putIfAbsent</code>、<code>compute</code>、<code>merge</code>
+等复合操作。</p>
+<pre class="java"><code>ConcurrentHashMap&lt;String, LongAdder&gt; hits = new ConcurrentHashMap&lt;&gt;();
+hits.computeIfAbsent(&quot;/orders&quot;, key -&gt; new LongAdder()).increment();</code></pre>
+<p>上面适合累加统计。相反，<code>if (!map.containsKey(k)) map.put(k, v);</code>
+是两个操作，期间可以插入其他线程。映射函数应短小，不要塞入慢网络调用，也不要随意递归更新同一个映射。</p>
+<p>容器的并发迭代通常不会给你一个冻结的全局快照。多个 key
+之间的业务不变量仍需要另行协调。Java 8+
+常见实现也不应再被描述为“固定使用 Segment 分段锁”；那是旧实现知识。</p>
+<h2 id="三种常见容器怎么选">8.2 三种常见容器怎么选</h2>
+<p><code>CopyOnWriteArrayList</code>
+修改时复制底层数组，适合读多写少、列表较小、可以接受迭代快照的监听器配置。写入多或数据量大时，复制与内存成本很高。</p>
+<p><code>ArrayBlockingQueue</code>
+是有界阻塞队列，适合明确限制积压任务。<code>put</code>
+在满时等待，<code>take</code> 在空时等待，<code>offer</code>
+可以立即或限时失败。<code>LinkedBlockingQueue</code>
+如果不指定容量，上限非常大，应用层面往往等同没有实用限制；积压可能先耗尽内存。</p>
+<p><code>SynchronousQueue</code>
+不存储元素，每次交接都需要匹配生产者与消费者。它的含义不是“容量小所以只能一个工作线程”。</p>
+<h2 id="countdownlatchcyclicbarriersemaphore">8.3
+CountDownLatch、CyclicBarrier、Semaphore</h2>
+<p>CountDownLatch 是一次性的完成门闩。初始值为 N，每完成一项
+<code>countDown()</code>，等待者在计数归零后继续。任务应在
+<code>finally</code> 中报告完成，否则异常可能让等待者永远等不到。</p>
+<p>CyclicBarrier
+是可重复使用的集合点：一组参与者都到达后一起继续，适合分阶段计算。参与者中断或超时可能使屏障破损，需要处理
+<code>BrokenBarrierException</code>，不能假设其他人继续照常等待。</p>
+<p>Semaphore 是许可证计数器。例如只允许 20
+个请求同时调用慢接口。拿到许可后才进入；在 finally
+里释放。未成功获取就释放会凭空增加许可，这是很隐蔽的错误。它限制同时进行的数量，不等同每秒请求数限制器。</p>
+<p><strong>选型练习：</strong> 等待三份报表全部下载用门闩或 Future
+聚合；限制数据库外的昂贵资源并发用
+Semaphore；每轮计算后全部参与者同步再下一轮用屏障。</p>
+<h1 id="第-9-章-线程池面试重点也是生产事故高发区">第 9
+章　线程池：面试重点也是生产事故高发区</h1>
+<h2 id="为什么复用线程">9.1 为什么复用线程</h2>
+<p>平台线程的创建、销毁和栈空间都有成本。线程池复用线程、集中管理任务、控制并发。任务是要做的事，线程是执行任务的工人。线程池的价值不仅是“快”，还在于对资源设置边界。</p>
+<p><code>execute(Runnable)</code>
+提交没有直接结果句柄的任务；<code>submit</code> 返回 Future。用
+<code>submit</code> 后，异常通常被记录在 Future 里，调用
+<code>get()</code> 才能通过 <code>ExecutionException</code>
+观察；如果从不检查结果，任务失败可能被忽略。</p>
+<h2 id="threadpoolexecutor-的七个参数">9.2 ThreadPoolExecutor
+的七个参数</h2>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+<th>决策关注点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>corePoolSize</td>
+<td>核心线程数量阈值</td>
+<td>正常工作并发</td>
+</tr>
+<tr>
+<td>maximumPoolSize</td>
+<td>最大线程数</td>
+<td>允许的峰值资源占用</td>
+</tr>
+<tr>
+<td>keepAliveTime</td>
+<td>超过核心数量的空闲线程存活时间</td>
+<td>回收速度</td>
+</tr>
+<tr>
+<td>unit</td>
+<td>时间单位</td>
+<td>避免单位错误</td>
+</tr>
+<tr>
+<td>workQueue</td>
+<td>等待队列</td>
+<td>积压上限与排队延迟</td>
+</tr>
+<tr>
+<td>threadFactory</td>
+<td>线程工厂</td>
+<td>命名与异常观测</td>
+</tr>
+<tr>
+<td>handler</td>
+<td>拒绝处理器</td>
+<td>饱和时如何失败或退让</td>
+</tr>
+</tbody>
+</table>
+<p>允许核心线程超时是另外可配置的行为，不要把 keepAliveTime
+说成永远只影响非核心线程。</p>
+<h2 id="提交顺序必须真正理解">9.3 提交顺序必须真正理解</h2>
+<p>在正常运行、线程工厂能创建线程的通常场景中，执行器大体按以下顺序处理任务：当前工作线程数少于
+core 时先尝试新建工作线程；否则尝试入队；队列装不下时，再尝试扩展到
+maximum；仍不能接纳则拒绝。执行器状态变化存在并发复查，资料 R3
+是完整规则的依据。</p>
+<p><strong>不是先开满 maximum 再入队。</strong> 假设
+core=2、max=4、队列容量=3，前两个任务一直阻塞。再提交三个任务通常进入队列；接下来的两个任务促使线程增加到
+4；再来一个才会拒绝。这个推演假定前面任务没有完成，真实系统的执行时机会改变观测。</p>
+<p>如果使用几乎无界的队列，任务通常一直入队，maximum
+可能根本不起扩容作用。队列越长并不代表越稳，它会让请求在排队中耗尽超时预算。</p>
+<h2 id="拒绝策略是业务决策">9.4 拒绝策略是业务决策</h2>
+<p>AbortPolicy 抛出异常，便于明确失败；CallerRunsPolicy
+在调用者线程执行，可能形成反馈压力，也可能阻塞 HTTP
+请求线程或事件循环；DiscardPolicy 静默丢弃；DiscardOldestPolicy
+丢弃队列头部并重试，可能破坏业务语义。</p>
+<p>尤其注意：某些静默丢弃策略与 <code>submit</code> 组合时，返回的
+Future 可能一直不完成。CallerRunsPolicy
+在执行器关闭时也不会替你执行被拒绝任务。不能把它们当成“永不丢任务”的承诺。</p>
+<p>对于不能丢的订单，进程内线程池本身不提供持久化保证，应根据业务使用可靠存储、消息队列、重试与幂等机制。</p>
+<h2 id="怎样估算线程数">9.5 怎样估算线程数</h2>
+<p>CPU 密集任务可以从接近可用 CPU 核数的量级起步，再测量。阻塞 I/O
+任务常用“核数 ×（1 + 等待时间 /
+计算时间）”估算平台线程数量，但这是粗略模型，不能绕开下游连接限制、内存、容器
+CPU 配额和延迟目标。</p>
+<p>把不同依赖的慢任务放进隔离的执行器，可以减少互相拖累。提交给同一个小线程池的父任务如果同步等待该池中的子任务，可能所有工作线程都在等待，子任务永远得不到执行。</p>
+<h2 id="正确关闭">9.6 正确关闭</h2>
+<p><code>shutdown()</code>
+不再接收新任务，已经接收的任务继续执行。<code>awaitTermination</code>
+限时等待结束。<code>shutdownNow()</code>
+尝试中断正在执行的任务，并返回尚未开始的排队任务；它不保证任务一定停下，也不替你补偿外部副作用。</p>
+<p>退出流程需要时间预算与告警。如果忽略中断或无限阻塞，进程可能迟迟无法退出。实验代码见第
+15 章。</p>
+<h1 id="第-10-章-future-与-completablefuture组织异步结果">第 10
+章　Future 与 CompletableFuture：组织异步结果</h1>
+<h2 id="异步不是自动更快">10.1 异步不是自动更快</h2>
+<p>异步表示当前调用不必同步等待全部工作完成。两个独立远程调用可以重叠等待，从而缩短总耗时；有依赖关系的步骤仍需要按顺序组合。把原来
+100 毫秒的 CPU 计算放进 Future，并不会凭空变成 1 毫秒。</p>
+<p>Future 的 <code>get()</code>
+会等待结果，也可以指定超时。它可能抛中断、执行失败、超时或取消相关异常。超时表示等待者不再等，不等于底层操作已经停止；必须设计底层网络超时、取消响应和资源清理。</p>
+<h2 id="组合操作读法">10.2 组合操作读法</h2>
+<p><code>thenApply</code> 把值映射成另一个值；<code>thenCompose</code>
+把返回的另一个阶段接进链条，避免层层嵌套；<code>thenCombine</code>
+合并两个独立阶段；<code>allOf</code>
+等待所有阶段完成，但不会自动替你收集各自返回值。</p>
+<pre class="java"><code>CompletableFuture&lt;String&gt; greeting =
+    CompletableFuture.supplyAsync(() -&gt; &quot;小林&quot;, executor)
+        .thenApply(name -&gt; &quot;你好，&quot; + name);</code></pre>
+<p>没有 Async
+后缀的回调可能由完成前一阶段的线程执行，也可能由其他完成相关操作的线程执行，不要依赖固定线程。带
+Async 后缀但没有显式执行器的操作通常使用默认异步执行设施，常见是公共
+ForkJoinPool；阻塞外部调用最好显式提供适当执行器并控制容量。详见资料
+R5。</p>
+<h2 id="失败处理与超时">10.3 失败处理与超时</h2>
+<p><code>exceptionally</code> 将异常恢复为值；<code>handle</code>
+同时处理成功与失败并产生新结果；<code>whenComplete</code>
+主要用于观察完成情况，它自己抛异常也可能影响返回阶段。</p>
+<p><code>orTimeout</code> 让 CompletableFuture
+在超时后异常完成，不保证停止底层请求。<code>cancel(true)</code> 在
+CompletableFuture
+上也不能按普通线程中断去理解；该实现不使用这个参数控制中断计算。</p>
+<p>组合三个服务时，应给整个请求设置截止时间，再给各子操作分配剩余时间。每一层各等
+3 秒，串起来可能让总耗时远超 3 秒。</p>
+<p><strong>练习：</strong> 商品价格与库存并行查询，用
+<code>thenCombine</code>
+组合结果；给其中一个查询制造异常，先观察异常传播，再决定业务上能否回退为“库存暂不可用”。不要用虚假的
+0 库存掩盖系统故障。</p>
+<h1 id="第-11-章-threadlocal不可变性与安全发布">第 11
+章　ThreadLocal、不可变性与安全发布</h1>
+<h2 id="threadlocal-是按线程存放数据">11.1 ThreadLocal
+是按线程存放数据</h2>
+<p>ThreadLocal 常用于请求上下文、跟踪 ID
+等。它不是给共享变量自动加锁，而是让不同线程通常取得各自绑定的值。如果你把同一个可变对象放进多个线程的
+ThreadLocal，它仍是共享对象。</p>
+<p>平台线程池会复用线程。上一个请求放入的用户 ID
+如果没有清理，下一个请求可能读到错误身份；这既是内存管理问题，也是数据正确性问题。</p>
+<pre class="java"><code>try {
+    context.set(requestId);
+    // 执行这次请求
+} finally {
+    context.remove();
+}</code></pre>
+<p>常见实现中键为弱引用，而值由线程内映射持有强引用。键被回收并不保证值立即消失。不要把“弱引用”误解成“无需清理”。异步任务切换线程时，也不会自动继承普通
+ThreadLocal 上下文；需要明确传递与清理策略。</p>
+<h2 id="final-为什么不等于不可变">11.2 final 为什么不等于不可变</h2>
+<p><code>final</code>
+引用不能重新指向另一个对象，但对象内容仍可改变。真正的不可变对象通常需要私有
+final 字段、构造期间不让 this
+逃逸、对可变输入做防御性复制、不提供修改方法，也不把内部可变对象直接返回给外界。</p>
+<p>正确构造的 final
+字段有特殊初始化安全保证，但这不代表可以忽视整个对象图后续修改与发布协议。共享对象的常见安全发布方式包括静态初始化、通过
+volatile 引用发布、在同一锁协议下交接、通过并发容器或任务提交等 API
+建立的内存一致性关系。</p>
+<h2 id="双重检查单例为什么要-volatile">11.3 双重检查单例为什么要
+volatile</h2>
+<p>双重检查锁定在外层无锁读取实例引用，内层加锁检查并初始化。如果采用这种模式，实例字段应是
+volatile，以满足正确发布所需的内存模型保证。不要只背“防止 new
+被重排”却说不清读者为什么需要看见初始化结果。</p>
+<p>初学者常可优先选择静态内部类持有者或枚举单例，减少手写并发协议的负担。单例对象中的可变业务状态仍然需要保护；“单例创建安全”与“单例所有方法安全”是两件事。</p>
+<h1 id="第-12-章-虚拟线程更轻的等待不是无限容量">第 12
+章　虚拟线程：更轻的等待，不是无限容量</h1>
+<h2 id="它改变了哪一层">12.1 它改变了哪一层</h2>
+<p>Java 21 正式提供虚拟线程，见资料 R6。它由 JDK
+调度到承载它的平台线程上，许多阻塞操作可以挂起虚拟线程并释放承载线程，让“一个任务一个线程”的代码风格用于大量等待型任务。</p>
+<p>虚拟线程不让 CPU
+算法算得更快；它主要降低大量线程等待时的资源成本。仍要限制数据库连接、外部
+API 调用、文件句柄和在途请求。百万个等待者也可能持有百万份请求对象。</p>
+<pre class="java"><code>try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+    Future&lt;Integer&gt; result = executor.submit(() -&gt; 42);
+    System.out.println(result.get());
+}</code></pre>
+<p>这是每任务创建虚拟线程的执行器。不要为了“复用更便宜的线程”再建一个固定大小的虚拟线程池；如果要限制某个资源的并发，直接用资源池或
+Semaphore 表达限制。</p>
+<h2 id="jdk-21-与-24-的重要差异">12.2 JDK 21 与 24 的重要差异</h2>
+<p>在 JDK 21，虚拟线程在某些场景下会固定在承载线程上，例如在
+synchronized
+相关区域中执行阻塞操作。这可能降低扩展性。应观测真实阻塞与固定情况，而不是机械地把所有
+synchronized 都改掉。</p>
+<p><strong>JDK 24 的 JEP 491
+改进了同步相关的固定问题</strong>，使虚拟线程能够在 synchronized
+相关阻塞情况下更灵活地卸载。原生代码等其他情形仍需关注。面试说“虚拟线程一进入
+synchronized
+就必然造成同样的性能问题”，必须说明版本和实际操作；也不能反过来说“从此完全没有固定问题”。资料
+R7 给出了设计范围。</p>
+<p>大量虚拟线程上使用 ThreadLocal
+还会带来每线程数据的内存成本。迁移时首先检查资源边界、超时、取消、上下文传递和观测工具，再讨论把多少平台线程替换掉。</p>
+<p><strong>回答示范：</strong> “对于大量独立阻塞
+I/O，我会评估虚拟线程，简化异步组合代码；对于 CPU
+密集任务，它不会增加核数。上线仍需要限流、连接池和压测，并核对 JDK
+版本对固定的影响。”</p>
+<h1 id="第-13-章-从多线程走向系统高并发">第 13
+章　从多线程走向系统高并发</h1>
+<h2 id="jvm-内的锁管不到其他进程">13.1 JVM 内的锁管不到其他进程</h2>
+<p>单个 Java 进程里的 synchronized
+可以保护本进程对象，不能阻止另一台服务器同时修改数据库。处理库存必须把最终约束放在所有写入者都遵守的地方，例如数据库条件更新。</p>
+<pre class="sql"><code>UPDATE stock
+SET remaining = remaining - 1
+WHERE sku_id = ? AND remaining &gt; 0;</code></pre>
+<p>在合适事务与数据模型下，可以根据受影响行数判断是否成功。订单创建、库存扣减、支付与消息发布涉及更大的事务边界，不能只靠这一句
+SQL 就宣称全链路一致。</p>
+<p>数据库还可以用版本号进行乐观并发控制；版本比较失败要按业务重试或返回冲突。不要不加上限地立即重试，把竞争进一步放大。</p>
+<h2 id="限流背压熔断与降级">13.2 限流、背压、熔断与降级</h2>
+<p>限流控制进入系统的速率或数量，常见方法包括令牌桶和滑动窗口。背压让上游感受到下游处理不过来，例如有界队列满后拒绝、阻塞或降速。熔断在持续故障时暂时停止部分调用，给系统恢复机会。降级减少非关键工作，例如暂时不展示个性化推荐。</p>
+<p>这几种机制目的不同。Semaphore 限并发不直接保证每秒只来 100
+次；令牌桶控制速率也不自动限制每个请求持有资源的时间。</p>
+<p>缓存可以降低读取压力，却要面对缓存穿透、击穿与雪崩。穿透是不存在的数据反复打到存储，可考虑空值短缓存或布隆过滤器；击穿是热点失效引发大量回源，可考虑单飞合并或受控刷新；雪崩是大量缓存或缓存服务同时失效，可考虑过期打散、故障隔离和回源限流。每一种缓解手段都要说明一致性和可用性代价。</p>
+<h2 id="幂等与重试">13.3 幂等与重试</h2>
+<p>网络超时只说明调用方没拿到结果，不代表服务端没执行。如果用户点击支付后超时，再试一次可能造成重复操作。因此需要幂等键、唯一约束、状态机或去重记录，让重复请求不会重复产生业务效果。</p>
+<p>重试应有次数上限、退避和抖动，并只对适合重试的失败使用。请求已经超过截止时间时继续排队重试，可能只是在制造无用工作。分布式锁也不是免思考的总开关：租约过期后旧持有者可能继续执行，必要时要由受保护资源校验
+fencing token 等防陈旧写入机制。</p>
+<h2 id="小案例一个查询订单接口">13.4 小案例：一个查询订单接口</h2>
+<p>先测出每次请求的 CPU
+时间、两次外部调用耗时与数据库连接占用。独立外部调用可以并行，但为各自设置并发上限和超时。数据库连接池有限时，让上游无限扩线程只会把等待搬到连接池。</p>
+<p>入口限制在途请求；执行器使用有界队列；超时后停止不再有价值的后续步骤；关键写入具备幂等；监控错误率、P99、队列长度和下游等待。如果吞吐提升却把
+P99 从 300 毫秒拉到 5 秒，这次调整可能不满足用户体验目标。</p>
+<p><strong>系统面试回答顺序：</strong>
+先确认规模与一致性要求，再找瓶颈，再提出边界和故障处理，最后说明怎样压测与验证。不要一开口就堆
+Redis、Kafka 和分布式锁。</p>
+<h1 id="第-14-章-排障从现象回到证据">第 14 章　排障：从现象回到证据</h1>
+<h2 id="cpu-高与请求慢不是同一问题">14.1 CPU 高与请求慢不是同一问题</h2>
+<p>CPU 高可能来自有效计算、忙循环、CAS 重试、序列化、GC
+或其他原因。请求慢而 CPU
+不高，常见原因是锁等待、数据库、网络、排队或连接池等待。先确认影响时间、版本、流量与最近变更，再采集证据。</p>
+<p>一个实用排查流程是：定位受影响进程与时间段，结合 CPU
+与内存指标，采集多份线程栈，检查执行器队列及下游耗时，再用 JFR
+等工具补充事件证据。单份栈只是一张照片，多次出现在同一位置才更有判断价值。</p>
+<h2 id="基本工具">14.2 基本工具</h2>
+<p>在具备合适权限且目标是对应 Java 进程时，可以使用：</p>
+<pre class="sh"><code>jcmd -l
+jcmd &lt;pid&gt; Thread.print -l
+jcmd &lt;pid&gt; JFR.start name=study settings=profile duration=60s filename=study.jfr</code></pre>
+<p>把 <code>&lt;pid&gt;</code>
+替换为进程号，不能原样复制。命令支持、权限和具体选项以目标 JDK
+为准，资料 R8 是 JDK 21 工具说明。JFR 文件可用 JDK Mission Control
+等工具分析。虚拟线程的观测方式与传统平台线程栈不同，可查询目标 JDK
+的线程转储命令与 JFR 事件，不要假设旧工具展示了全部虚拟线程。</p>
+<p>生产环境采集会有一定成本，应按现场容量、权限和数据管理要求执行。初学者先在自己的实验进程上练习。</p>
+<h2 id="读栈时问什么">14.3 读栈时问什么</h2>
+<p>很多线程在等同一监视器：查谁持有它，锁内是否进行了慢
+I/O。很多任务在等连接：查连接池是否用满、是否泄漏、数据库是否变慢。线程池全忙且队列上涨：查任务耗时与到达率，扩容前核对下游能否承受。</p>
+<p>发现死锁报告后，要找出资源获取顺序并修复协议。简单重启可能暂时恢复服务，却没有消除再次死锁的原因。记录事件时区与精确时间，关联应用日志、数据库与监控。</p>
+<h2 id="怎样做有意义的压测">14.4 怎样做有意义的压测</h2>
+<p>先预热，再以多个负载台阶观察吞吐、P50/P95/P99、错误率、CPU、GC、队列长度和连接等待。测试数据与下游环境应接近目标场景，避免把缓存命中率变化误判为线程参数优化。</p>
+<p>微基准用 JMH 等工具处理预热、JIT 与测量问题；不要用一次
+<code>currentTimeMillis()</code>
+差值就宣布某把锁比另一把快。并发正确性可以借助压力测试与 jcstress
+等工具寻找反例，但没有发现反例不等于形式证明。对本书例子，我们用明确的不变量与同步关系解释正确性。</p>
+<h1 id="第-15-章-五个完整实验运行观察解释">第 15
+章　五个完整实验：运行、观察、解释</h1>
+<p>这些例子是完整的独立 Java
+源文件，和电子书一同提供。将代码保存为对应文件名后，执行
+<code>javac -encoding UTF-8 文件名.java</code>，再执行
+<code>java 类名</code>。先预测输出，再实际运行。</p>
+<h2 id="实验一丢失更新与原子计数">实验一：丢失更新与原子计数</h2>
+<p>保存为 <code>CounterLab.java</code>：</p>
+<pre class="java"><code>import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class CounterLab {
+    private static int unsafe;
+    private static final AtomicInteger safe = new AtomicInteger();
+
+    public static void main(String[] args) throws InterruptedException {
+        int threads = 4, loops = 100_000;
+        CountDownLatch start = new CountDownLatch(1);
+        Thread[] workers = new Thread[threads];
+        for (int i = 0; i &lt; threads; i++) {
+            workers[i] = new Thread(() -&gt; {
+                try {
+                    start.await();
+                    for (int j = 0; j &lt; loops; j++) {
+                        unsafe++;
+                        safe.incrementAndGet();
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            });
+            workers[i].start();
+        }
+        start.countDown();
+        for (Thread worker : workers) worker.join();
+        System.out.println(&quot;期望=&quot; + threads * loops);
+        System.out.println(&quot;普通=&quot; + unsafe + &quot;，原子=&quot; + safe.get());
+        if (safe.get() != threads * loops) throw new AssertionError();
+    }
+}</code></pre>
+<p>没有外部中断、任务正常执行时，原子结果必须是
+400000。普通结果可能更小，也可能碰巧正确，不应断言它一定错。<code>join()</code>
+确保主线程等所有更新完成再观察结果；它不能回头把已经丢失的更新补回来。</p>
+<p><strong>改造题：</strong>
+用同一个锁保护普通自增，结果应正确。再只给打印加锁，计数仍然不因此安全。解释它们的差异。</p>
+<h2 id="实验二库存不能卖成负数">实验二：库存不能卖成负数</h2>
+<p>保存为 <code>StockLab.java</code>：</p>
+<pre class="java"><code>import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class StockLab {
+    static final class Stock {
+        private int remaining = 100;
+        synchronized boolean buy() {
+            if (remaining == 0) return false;
+            remaining--;
+            return true;
+        }
+        synchronized int remaining() { return remaining; }
+    }
+    public static void main(String[] args) throws Exception {
+        Stock stock = new Stock();
+        AtomicInteger sold = new AtomicInteger();
+        ExecutorService pool = Executors.newFixedThreadPool(8);
+        Future&lt;?&gt;[] tasks = new Future&lt;?&gt;[1000];
+        try {
+            for (int i = 0; i &lt; tasks.length; i++) {
+                tasks[i] = pool.submit(() -&gt; {
+                    if (stock.buy()) sold.incrementAndGet();
+                });
+            }
+            for (Future&lt;?&gt; task : tasks) task.get();
+        } finally {
+            pool.shutdown();
+            if (!pool.awaitTermination(5, TimeUnit.SECONDS)) pool.shutdownNow();
+        }
+        System.out.println(&quot;售出=&quot; + sold.get() + &quot;，剩余=&quot; + stock.remaining());
+        if (sold.get() != 100 || stock.remaining() != 0) throw new AssertionError();
+    }
+}</code></pre>
+<p>这个例子只提交固定 1000
+个很短任务，用于演示互斥；生产中不应不加评估地照搬
+<code>newFixedThreadPool</code>
+的近乎无界队列。关键不是“用了线程池”，而是所有购买者操作同一个
+Stock，且检查和扣减处在同一临界区。</p>
+<h2 id="实验三稳定复现线程池拒绝">实验三：稳定复现线程池拒绝</h2>
+<p>保存为 <code>PoolLab.java</code>：</p>
+<pre class="java"><code>import java.util.concurrent.*;
+
+public class PoolLab {
+    public static void main(String[] args) throws Exception {
+        CountDownLatch release = new CountDownLatch(1);
+        ThreadPoolExecutor pool = new ThreadPoolExecutor(
+            2, 4, 30, TimeUnit.SECONDS,
+            new ArrayBlockingQueue&lt;&gt;(2),
+            Executors.defaultThreadFactory(),
+            new ThreadPoolExecutor.AbortPolicy());
+        Runnable task = () -&gt; {
+            try { release.await(); }
+            catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+        };
+        int accepted = 0, rejected = 0;
+        try {
+            for (int i = 0; i &lt; 7; i++) {
+                try { pool.execute(task); accepted++; }
+                catch (RejectedExecutionException e) { rejected++; }
+            }
+            System.out.println(&quot;接收=&quot; + accepted + &quot;，拒绝=&quot; + rejected);
+            System.out.println(&quot;线程=&quot; + pool.getPoolSize()
+                + &quot;，排队=&quot; + pool.getQueue().size());
+            if (accepted != 6 || rejected != 1) throw new AssertionError();
+        } finally {
+            release.countDown();
+            pool.shutdown();
+            if (!pool.awaitTermination(5, TimeUnit.SECONDS)) {
+                pool.shutdownNow();
+                throw new AssertionError(&quot;线程池未及时结束&quot;);
+            }
+        }
+    }
+}</code></pre>
+<p>门闩阻止任务提前结束，因此在通常可正常创建线程的环境下，四个线程被占用、两个任务排队，第七个被拒绝。这里用同步工具固定关键条件，而不是依靠
+<code>sleep(1000)</code> 赌调度时机。</p>
+<p><strong>改造题：</strong> 把队列容量改成
+10，仍提交七个任务。为什么没有扩到四个线程？回到第 9 章逐步推演。</p>
+<h2 id="实验四有界队列生产者消费者">实验四：有界队列生产者消费者</h2>
+<p>保存为 <code>QueueLab.java</code>：</p>
+<pre class="java"><code>import java.util.concurrent.*;
+
+public class QueueLab {
+    public static void main(String[] args) throws Exception {
+        BlockingQueue&lt;Integer&gt; queue = new ArrayBlockingQueue&lt;&gt;(2);
+        ExecutorService pool = Executors.newFixedThreadPool(2);
+        try {
+            Future&lt;Integer&gt; consumer = pool.submit(() -&gt; {
+                int sum = 0;
+                while (true) {
+                    int value = queue.take();
+                    if (value == -1) return sum;
+                    sum += value;
+                }
+            });
+            Future&lt;?&gt; producer = pool.submit(() -&gt; {
+                try {
+                    for (int i = 1; i &lt;= 5; i++) queue.put(i);
+                    queue.put(-1);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(e);
+                }
+            });
+            producer.get(5, TimeUnit.SECONDS);
+            int sum = consumer.get(5, TimeUnit.SECONDS);
+            System.out.println(&quot;合计=&quot; + sum);
+            if (sum != 15) throw new AssertionError();
+        } finally {
+            pool.shutdownNow();
+            if (!pool.awaitTermination(5, TimeUnit.SECONDS)) throw new AssertionError();
+        }
+    }
+}</code></pre>
+<p><code>-1</code>
+是本实验约定的结束标记，数据范围保证不包含它。多消费者时，通常每个消费者都需要结束信号，或采用其他明确的关闭协议。生产者异常退出时也要唤醒或取消消费者；本例通过
+Future 超时与 finally 中断避免永久等待。</p>
+<h2 id="实验五虚拟线程与资源上限">实验五：虚拟线程与资源上限</h2>
+<p>保存为 <code>VirtualLab.java</code>，需要 Java 21：</p>
+<pre class="java"><code>import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class VirtualLab {
+    public static void main(String[] args) throws Exception {
+        Semaphore permits = new Semaphore(3);
+        AtomicInteger active = new AtomicInteger();
+        AtomicInteger peak = new AtomicInteger();
+        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            List&lt;Future&lt;?&gt;&gt; futures = new ArrayList&lt;&gt;();
+            for (int i = 0; i &lt; 20; i++) {
+                futures.add(executor.submit(() -&gt; {
+                    boolean acquired = false;
+                    try {
+                        permits.acquire();
+                        acquired = true;
+                        int now = active.incrementAndGet();
+                        try {
+                            peak.accumulateAndGet(now, Math::max);
+                            Thread.sleep(20); // 模拟等待外部服务
+                        } finally { active.decrementAndGet(); }
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        throw new RuntimeException(e);
+                    } finally {
+                        if (acquired) permits.release();
+                    }
+                }));
+            }
+            for (Future&lt;?&gt; future : futures) future.get();
+        }
+        System.out.println(&quot;最大同时调用=&quot; + peak.get());
+        if (peak.get() &gt; 3 || active.get() != 0) throw new AssertionError();
+    }
+}</code></pre>
+<p>20 个任务都可以拥有自己的虚拟线程，但昂贵资源区最多同时进入 3
+个。观测峰值通常为 3，严格正确性要求是不得超过 3，而不是必须恰好观察到
+3。这里 sleep 用来模拟等待，不承担正确性同步职责。</p>
+<h1 id="第-16-章-高频主题面试问答与追问">第 16
+章　高频主题面试问答与追问</h1>
+<p>以下是常见知识主题整理，不是特定公司的真实题库或频次统计。先遮住答案说
+30 秒，再读解析。</p>
+<h2 id="基础与内存模型">16.1 基础与内存模型</h2>
+<p><strong>1．并发与并行有什么区别？</strong>
+并发是多个任务在时间上交错推进，并行是同时执行。单核也能并发，多核才能提供更多
+CPU 并行能力。追问：I/O 并发为什么不要求每个请求独占
+CPU？因为任务等待外部资源时 CPU 可以处理别的任务。</p>
+<p><strong>2．为什么 count++ 不安全？</strong>
+它是读改写复合操作，两个线程可以读取同一旧值，覆盖对方的增量。追问
+volatile 能否修复？不能，应使用锁或原子操作。</p>
+<p><strong>3．JMM 与 JVM 内存结构的区别？</strong> JMM
+规定多线程访问共享数据的允许行为和顺序关系；堆、栈、方法区等是运行时数据区域概念。追问
+happens-before：用解锁与后续加锁、start、join 举例。</p>
+<p><strong>4．volatile 能做什么？</strong>
+提供字段读写的可见性与相关顺序保证，适合独立状态标记和正确设计的发布协议，不提供通用互斥。追问多个
+volatile 字段能否形成事务？不能。</p>
+<p><strong>5．final 引用一定线程安全吗？</strong>
+不一定，它只是不能改指向；被引用对象可能仍可变。追问如何构建不可变对象：构造完成不逃逸、防御性复制、封闭修改入口。</p>
+<p><strong>6．start 与 run 的差别？</strong> start 启动新线程执行
+run；直接 run 是普通调用。一个 Thread 不能重复
+start，任务要重复执行应创建新线程或提交到执行器。</p>
+<h2 id="锁与协作">16.2 锁与协作</h2>
+<p><strong>7．synchronized 锁住什么？</strong> 实例方法锁
+this，静态方法锁 Class
+对象，同步块锁指定对象。互斥要基于同一个监视器。追问两个实例同步方法：不同实例之间通常不互斥。</p>
+<p><strong>8．synchronized 与 ReentrantLock 怎么选？</strong>
+默认先用简单的同步结构；需要限时、可中断获取、多条件队列时考虑显式锁。两者都可以提供互斥和可见性，不应只背“一定谁更快”。</p>
+<p><strong>9．wait 与 sleep 的区别？</strong> wait
+属于对象监视器等待协议，需要拥有该监视器并释放它；sleep
+暂停当前线程，不释放已持有的锁。两者都可响应中断。追问为何 wait 用
+while：虚假唤醒与条件再次变化。</p>
+<p><strong>10．怎样停止线程？</strong>
+使用协作式中断或正确可见的停止状态，并为阻塞操作设置可取消和超时机制。追问
+shutdownNow 能否强杀？不能保证，它主要尝试中断。</p>
+<p><strong>11．什么是死锁？如何避免？</strong>
+多个参与者循环持有并等待资源，彼此无法推进；统一锁顺序、减少嵌套、超时获取与失败回滚是常见手段。追问怎样证明：采集线程栈并识别等待与持有关系。</p>
+<p><strong>12．公平锁一定更好吗？</strong>
+不一定。公平可能改善等待分布，却降低吞吐；也不能保证系统调度公平。追问
+tryLock：无参 tryLock 不遵守同样的公平排队策略。</p>
+<h2 id="原子类容器和线程池">16.3 原子类、容器和线程池</h2>
+<p><strong>13．CAS 有什么问题？</strong> 竞争失败重试可能耗 CPU，存在
+ABA
+等算法风险，单地址更新也不能直接维护多字段业务约束。追问怎么办：版本戳、合适的数据结构或锁，具体取决于语义。</p>
+<p><strong>14．LongAdder 为什么常用于统计？</strong>
+分散更新缓解热点竞争，汇总读取；并发 sum
+不是原子快照，所以不适合严格库存决策。</p>
+<p><strong>15．ConcurrentHashMap 为什么仍可能用错？</strong>
+单个操作的并发安全不等于多个操作组合原子；先查再写仍有竞争。用
+compute、merge 等表达合适的复合动作，并让函数短小。</p>
+<p><strong>16．线程池什么时候扩到 maximum？</strong> 达到 core
+后通常先入队，队列不能接纳时再扩展到 max。追问无界队列：可能导致 max
+失去实际扩容作用，且积压耗尽内存。</p>
+<p><strong>17．execute 与 submit 的异常如何观察？</strong> submit
+把失败保存在 Future，get 时观察；execute
+中未捕获异常会走工作线程的未捕获异常路径等处理机制。应有统一的任务失败观测，不要依赖控制台偶然打印。</p>
+<p><strong>18．拒绝策略怎么选？</strong>
+根据是否允许丢失、是否可阻塞调用者、能否持久化和重试来选择。默认明确失败通常比无声丢弃更易诊断，关键业务仍需要端到端可靠性设计。</p>
+<p><strong>19．线程池设多大？</strong> 先区分 CPU 与等待型工作，检查 CPU
+配额、下游连接、队列和内存，用模型给初始值，再以吞吐与尾延迟压测。没有普适的“CPU
+× 2 最优”。</p>
+<p><strong>20．CountDownLatch 和 CyclicBarrier 的区别？</strong>
+前者一次性倒计数，可由另一组线程等待；后者让固定参与者分轮集合，可复用。追问异常：屏障可能破损，门闩若漏
+countDown 则可能永久等待。</p>
+<h2 id="现代并发与系统设计">16.4 现代并发与系统设计</h2>
+<p><strong>21．CompletableFuture 超时会停止底层任务吗？</strong>
+不保证。它可以让结果阶段超时完成，底层
+HTTP、数据库或计算需要自己的取消与超时机制。</p>
+<p><strong>22．ThreadLocal 为什么泄漏或串数据？</strong>
+长寿命线程复用，未清理的值可能长期保留或被下一请求读到。try/finally
+remove；跨线程上下文需要显式设计。</p>
+<p><strong>23．虚拟线程适合什么？</strong>
+大量独立、阻塞等待为主的任务；不增加 CPU 计算能力。追问 synchronized
+固定：说明 JDK 21 与 JDK 24 JEP 491 的差异。</p>
+<p><strong>24．高并发下库存怎么不超卖？</strong>
+把约束放到数据库原子条件更新、事务等所有写入者共同遵守的机制里；单 JVM
+的锁不能协调多实例。再处理重复下单、重试、幂等与失败补偿。</p>
+<p><strong>25．接口突然变慢怎么办？</strong>
+对齐故障时间、流量与变更，观察
+CPU、GC、执行器队列、连接池和下游延迟，多次线程栈与 JFR
+验证猜测。不要尚未定位就盲目扩大线程池。</p>
+<p><strong>26．如果不知道底层实现怎么回答？</strong>
+先说明自己知道的规范保证与使用边界；明确实现版本待确认。能画出正确交互和失败路径，通常比背错源码细节更有价值。</p>
+<h1 id="第-17-章-场景题与代码审查训练">第 17
+章　场景题与代码审查训练</h1>
+<h2
+id="场景一查完缓存再写入仍然重复加载">场景一：查完缓存再写入，仍然重复加载</h2>
+<p>代码是
+<code>if (cache.get(k) == null) cache.put(k, load(k));</code>。两个线程可以同时看到缺失，然后都加载。先确认重复加载是否可接受；若代价大，可设计按
+key 合并在途请求，或谨慎使用
+computeIfAbsent。慢加载放进映射函数会影响相关更新，要考虑超时、异常、失败移除与热点隔离。</p>
+<p>评估答案时问：是否只防止了一个进程内的重复？多实例同时回源怎么办？缓存失效时能否保护数据库？不要把一个
+API 调用描述成完整的分布式缓存方案。</p>
+<h2 id="场景二线程池增加到-500-后数据库更慢">场景二：线程池增加到 500
+后数据库更慢</h2>
+<p>推理链条：更多任务同时到达连接池；连接数不够就等待；连接数增加又可能压垮数据库；等待拉长导致在途请求增多，内存和超时进一步恶化。</p>
+<p>改进从限制入口与在途量、设置队列上限、限制数据库并发、优化慢查询开始，再按测量调整。成功标准包括错误率和尾延迟，而不只是工作线程变多。</p>
+<h2
+id="场景三两个接口查询可以并行吗">场景三：两个接口查询可以并行吗</h2>
+<p>若价格与库存彼此独立，可以并行，完成后合并；若第二步需要第一步的鉴权或事务结果，就不能假装独立。要说明总截止时间、其中一个失败怎么办、取消是否真正到达下游，以及执行器饱和时的行为。</p>
+<h2
+id="场景四读多写少一定用读写锁吗">场景四：读多写少一定用读写锁吗</h2>
+<p>不一定。临界区非常短时，读写锁管理开销可能抵消收益；写者等待和业务一致性也影响选择。不可变快照、CopyOnWrite
+或普通互斥锁都可能更合适。StampedLock
+的乐观读需要校验，而且不可重入，初学者不要把它当成万能升级版。</p>
+<h2 id="场景五找出这段代码的问题">场景五：找出这段代码的问题</h2>
+<pre class="java"><code>if (permits.tryAcquire()) {
+    callRemote();
+}
+permits.release();</code></pre>
+<p>如果没拿到许可仍释放，会增加许可；如果 callRemote
+抛异常，又可能来不及释放。正确结构是获取成功后，try 执行，finally
+释放；失败分支明确返回限流或安排受控等待。</p>
+<p>再看这一段：</p>
+<pre class="java"><code>Future&lt;?&gt; f = pool.submit(() -&gt; { throw new RuntimeException(&quot;失败&quot;); });
+System.out.println(&quot;提交成功&quot;);</code></pre>
+<p>提交成功不等于任务成功。应观察 Future
+结果或有统一的异常收集机制。若业务只关心提交，应有可观测、可追踪的后续完成状态。</p>
+<h2 id="一次-15-分钟模拟面试">一次 15 分钟模拟面试</h2>
+<p>前 3 分钟解释一个 count++ 竞态；接着 4 分钟画线程池入队扩容过程；再用
+4 分钟讨论库存跨实例正确性；最后 4 分钟解释排查慢接口的证据链。</p>
+<p>每项按 0—2 分自评：0 分只有术语；1 分结论基本正确但无法解释例子；2
+分能说明正确性边界与失败处理。得分低的章节回去做实验，不用先背更多术语。</p>
+<h1 id="第-18-章-四周学习计划与速查表">第 18
+章　四周学习计划与速查表</h1>
+<h2 id="第一周能解释为什么错">第一周：能解释为什么错</h2>
+<p>第 1 天安装 JDK，运行 Hello；第 2 天读并发、并行与线程状态；第 3
+天做中断退出练习；第 4 天运行 CounterLab；第 5 天读 happens-before；第 6
+天运行 StockLab 并解释完整临界区；第 7 天复述基础问答，不看答案。</p>
+<p>验收：你能画出两线程丢失更新的交错，知道 volatile 不能修复自增，能用
+join 等待完成。</p>
+<h2 id="第二周能选对工具">第二周：能选对工具</h2>
+<p>第 8—9 天学习锁与条件队列；第 10 天学习
+CAS、AtomicInteger、LongAdder；第 11 天比较三种并发容器；第 12
+天练门闩与许可证；第 13 天运行 QueueLab；第 14 天做场景代码审查。</p>
+<p>验收：你能说出“容器安全不等于业务原子”，知道为什么等待条件用
+while，能够在异常路径释放许可和锁。</p>
+<h2 id="第三周能控制任务与资源">第三周：能控制任务与资源</h2>
+<p>第 15—16 天学习线程池并运行 PoolLab；第 17 天学习异常观测与关闭；第
+18 天学习 CompletableFuture 组合；第 19 天复习 ThreadLocal 清理；第 20
+天运行 VirtualLab；第 21 天比较 JDK 21 与 24 的虚拟线程差异。</p>
+<p>验收：你能按提交顺序推演线程数与队列，能区分等待超时和任务终止，知道虚拟线程仍需资源边界。</p>
+<h2 id="第四周能把知识放进系统">第四周：能把知识放进系统</h2>
+<p>第 22—23 天读库存、幂等、限流；第 24 天对自己的 Java
+进程采集线程栈；第 25 天录制一次 JFR；第 26 天完成五个场景题；第 27
+天做模拟面试；第 28 天把容易混淆的知识写成一页自己的笔记。</p>
+<p>每天记录三句话：“今天看到什么现象”“为什么发生”“我如何验证”。如果进度慢，延长周期即可；先理解基本模型比按期背完更重要。</p>
+<h2 id="工具选型速查">工具选型速查</h2>
+<table>
+<thead>
+<tr>
+<th>需求</th>
+<th>首先考虑</th>
+<th>要记住的限制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>独立停止标记</td>
+<td>volatile / 中断协议</td>
+<td>不保护多步业务</td>
+</tr>
+<tr>
+<td>多字段保持一致</td>
+<td>同一锁保护完整约束</td>
+<td>所有访问者遵守协议</td>
+</tr>
+<tr>
+<td>单变量精确原子更新</td>
+<td>AtomicInteger/Long</td>
+<td>外部副作用别放重试函数</td>
+</tr>
+<tr>
+<td>高竞争统计累加</td>
+<td>LongAdder</td>
+<td>sum 不是并发原子快照</td>
+</tr>
+<tr>
+<td>并发映射</td>
+<td>ConcurrentHashMap</td>
+<td>多 key 事务另行设计</td>
+</tr>
+<tr>
+<td>小型读多写少列表</td>
+<td>CopyOnWriteArrayList</td>
+<td>写入复制成本</td>
+</tr>
+<tr>
+<td>有界生产消费</td>
+<td>BlockingQueue</td>
+<td>设计关闭与失败路径</td>
+</tr>
+<tr>
+<td>等一组任务结束</td>
+<td>Future / CountDownLatch</td>
+<td>异常与超时仍需处理</td>
+</tr>
+<tr>
+<td>控制同时访问资源数</td>
+<td>Semaphore</td>
+<td>非每秒速率控制</td>
+</tr>
+<tr>
+<td>管理平台线程任务</td>
+<td>有边界的执行器</td>
+<td>队列与拒绝都要设计</td>
+</tr>
+<tr>
+<td>大量阻塞等待任务</td>
+<td>虚拟线程</td>
+<td>CPU、下游、内存仍有限</td>
+</tr>
+<tr>
+<td>多实例库存约束</td>
+<td>数据库并发控制等</td>
+<td>JVM 锁不足以跨实例</td>
+</tr>
+</tbody>
+</table>
+<h2 id="面试前最后检查">面试前最后检查</h2>
+<p>你是否能解释一个失败交错，而不是只说“不安全”？是否说明锁住哪个对象？是否处理异常、中断和清理？是否知道队列满了会怎样？是否明确
+JDK 版本？是否给出验证指标？</p>
+<p>能把这些问题讲清楚，就已经具备扎实的初级并发思维。之后再逐步学习
+AQS、ForkJoin 工作窃取、JMH、jcstress、JFR
+与数据库事务隔离，不必一次全部背下来。</p>
+<h1 id="附录-a-容易误记的说法">附录 A　容易误记的说法</h1>
+<table>
+<thead>
+<tr>
+<th>常见说法</th>
+<th>更准确的表述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>volatile 让变量完全线程安全</td>
+<td>要看操作，复合更新仍需协调</td>
+</tr>
+<tr>
+<td>sleep 一会就同步好了</td>
+<td>不能用睡眠建立完成或可见性协议</td>
+</tr>
+<tr>
+<td>synchronized 只负责互斥</td>
+<td>同一监视器的解锁与加锁还提供可见性关系</td>
+</tr>
+<tr>
+<td>线程越多越快</td>
+<td>资源、争用与排队决定收益</td>
+</tr>
+<tr>
+<td>线程池先开到 max 再排队</td>
+<td>通常先到 core，再排队，再到 max</td>
+</tr>
+<tr>
+<td>submit 的异常会自动提醒我</td>
+<td>需要观察 Future 或统一监控</td>
+</tr>
+<tr>
+<td>shutdownNow 保证任务停止</td>
+<td>它只是尝试中断，任务需要合作</td>
+</tr>
+<tr>
+<td>并发容器能解决所有业务竞争</td>
+<td>复合业务约束仍要单独表达</td>
+</tr>
+<tr>
+<td>LongAdder 可以直接当库存</td>
+<td>并发汇总不是原子决策快照</td>
+</tr>
+<tr>
+<td>超时了就一定没执行</td>
+<td>可能执行成功但结果丢失，要设计幂等</td>
+</tr>
+<tr>
+<td>ThreadLocal 自动跟着请求走</td>
+<td>绑定的是线程，线程会复用和切换</td>
+</tr>
+<tr>
+<td>虚拟线程没有任何上限</td>
+<td>仍受对象、下游、内存与调度资源约束</td>
+</tr>
+</tbody>
+</table>
+<h1 id="附录-b-术语小词典">附录 B　术语小词典</h1>
+<ul>
+<li><strong>临界区</strong>：按同一协议互斥访问共享状态的代码区域。</li>
+<li><strong>竞态条件</strong>：结果依赖未经控制的执行交错或时机。</li>
+<li><strong>数据竞争</strong>：访问同一变量、至少一个为写、且未被
+happens-before 正确排序的冲突访问。</li>
+<li><strong>安全发布</strong>：使其他线程以符合内存模型的方式取得正确初始化对象。</li>
+<li><strong>可重入</strong>：同一线程可再次获取已持有的相同锁。</li>
+<li><strong>原子操作</strong>：对所讨论的并发观察而言不可被拆成中间状态的操作。</li>
+<li><strong>背压</strong>：下游容量不足时，让上游减速或拒绝更多工作。</li>
+<li><strong>尾延迟</strong>：分布末端的高百分位延迟，例如 P99。</li>
+<li><strong>幂等</strong>：重复同一逻辑请求不会产生重复业务效果的性质。</li>
+<li><strong>线程饥饿</strong>：某些任务长期无法得到执行或资源的情况。</li>
+<li><strong>承载线程</strong>：执行虚拟线程的平台线程。</li>
+<li><strong>截止时间</strong>：操作必须完成的绝对时间边界，可用于分配剩余超时预算。</li>
+</ul>
+<h1 id="附录-c-进阶面试第一站aqs-与读写锁">附录 C　进阶面试第一站：AQS
+与读写锁</h1>
+<h2 id="aqs-先理解框架职责">AQS 先理解框架职责</h2>
+<p>AQS 是 AbstractQueuedSynchronizer
+的缩写。它是构建锁和同步器的框架，不是一把具体的业务锁。可以先把它理解为“共享一个状态值，并为暂时不能成功的线程提供排队和等待机制”。ReentrantLock、Semaphore、CountDownLatch
+都可以借助它实现各自的语义，但对状态值的解释不同。</p>
+<p>ReentrantLock 的独占同步状态可以表示同一线程的重入次数；Semaphore
+的状态可以表示许可数量；CountDownLatch
+的状态可以表示未完成计数。不要背成“AQS 的 state
+永远表示重入次数”。是否独占、是否共享、怎样尝试获取，取决于同步器的实现。</p>
+<p>简化流程是：先尝试获取；失败则进入等待协议；资源释放后，符合条件的等待者获得再次尝试的机会。实际框架要处理取消、中断、超时、唤醒与队列竞争，比这个示意复杂得多。被唤醒不等于已经拥有资源。</p>
+<p>面试可先这样回答：“AQS
+把同步状态管理和等待队列等公共机制抽象出来，具体同步器实现获取、释放语义。它支持独占与共享模式。理解它有助于解释不同工具为什么能用相近框架实现不同规则。”不要把队列节点字段和某一版源码行号当成概念本身。</p>
+<h2 id="parkunpark-与等待条件">park/unpark 与等待条件</h2>
+<p>LockSupport 的 park 可以让线程停放，unpark
+为线程提供继续执行的许可。许可最多保留一份，不会像计数器一样无限累加，因此先
+unpark 后 park 在正确协议下也有意义。park
+可能因中断或其他原因返回，使用者仍需循环检查实际条件。</p>
+<p>这解释了显式锁为何不需要把所有等待都表现成 Java 的 BLOCKED 状态。park
+是底层等待手段，业务正确性仍来自状态、原子操作、内存可见性与完整等待协议的组合。</p>
+<h2 id="读写锁适合哪种问题">读写锁适合哪种问题</h2>
+<p>ReentrantReadWriteLock
+允许多个读者并行，写者独占。前提是所有相关访问者遵循同一个读写锁协议，且读操作确实不修改共享状态。读锁不是“低等级的写锁”，也不能因为持有读锁就放心修改容器。</p>
+<p>同一线程可以先持有写锁，再取得读锁，最后释放写锁，完成降级，以便在保持某些保护的情况下进入只读阶段。持有读锁后直接等待升级为写锁通常会造成无法推进，应重新设计流程；释放读锁再取得写锁时，必须重新验证条件，因为中间状态可能改变。</p>
+<p>StampedLock 提供写锁、读锁与乐观读。乐观读先取
+stamp，复制相关字段，再
+validate；验证失败必须退回正确的加锁读取路径。它不可重入，使用复杂度更高。不要在未经验证的乐观读取结果上直接执行外部副作用。</p>
+<p><strong>进阶自测：</strong>
+为什么缓存读多写少也不一定适合读写锁？因为读临界区时长、锁管理成本、写频率与等待分布会共同影响性能。先证明语义正确，再测量收益。</p>
+<p>参考：<a
+href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/locks/AbstractQueuedSynchronizer.html">AQS
+API</a>、<a
+href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/locks/LockSupport.html">LockSupport
+API</a>、<a
+href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/locks/ReentrantReadWriteLock.html">ReentrantReadWriteLock
+API</a>、<a
+href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/locks/StampedLock.html">StampedLock
+API</a>。</p>
+<h1 id="附录-d-参考资料与检索说明">附录 D　参考资料与检索说明</h1>
+<p>检索与核对日期：2026 年 10 月 20
+日。中文讲解与例子为原创组织，下面链接用于核对规范与
+API，不是对外部教程的大段复制。阅读英文文档时先看类说明，再看方法的异常、线程安全与内存一致性条款。</p>
+<p><strong>R1．Java Language Specification 21，第 17 章 Threads and
+Locks</strong><br />
+<a href="https://docs.oracle.com/javase/specs/jls/se21/html/jls-17.html"
+class="uri">https://docs.oracle.com/javase/specs/jls/se21/html/jls-17.html</a><br />
+对应第 4、5、11 章。重点：17.4.5 happens-before、17.5 final
+字段语义，以及 wait 和通知。</p>
+<p><strong>R2．java.util.concurrent 包总览，Java 21</strong><br />
+<a
+href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/package-summary.html"
+class="uri">https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/package-summary.html</a><br />
+对应第 3、8、9、10 章。重点：执行器、同步工具、并发集合和 Memory
+Consistency Properties。</p>
+<p><strong>R3．ThreadPoolExecutor API，Java 21</strong><br />
+<a
+href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.html"
+class="uri">https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.html</a><br />
+对应第 9、15 章。重点：Core and maximum pool sizes、Queuing、Rejected
+tasks。</p>
+<p><strong>R4．Condition API，Java 21</strong><br />
+<a
+href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/locks/Condition.html"
+class="uri">https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/locks/Condition.html</a><br />
+对应第 6 章。重点：await
+释放与重新获取锁，虚假唤醒与有界缓冲区示例。</p>
+<p><strong>R5．CompletableFuture API，Java 21</strong><br />
+<a
+href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/CompletableFuture.html"
+class="uri">https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/CompletableFuture.html</a><br />
+对应第 10 章。重点：回调执行策略、异常完成、cancel、orTimeout。</p>
+<p><strong>R6．OpenJDK JEP 444：Virtual Threads</strong><br />
+<a href="https://openjdk.org/jeps/444"
+class="uri">https://openjdk.org/jeps/444</a><br />
+对应第 12、15 章。Java 21
+正式特性；重点：吞吐、不要池化虚拟线程、固定与观测。</p>
+<p><strong>R7．OpenJDK JEP 491：Synchronize Virtual Threads without
+Pinning</strong><br />
+<a href="https://openjdk.org/jeps/491"
+class="uri">https://openjdk.org/jeps/491</a><br />
+对应第 12 章。Java 24 特性；重点：监视器相关固定问题的改进与范围。</p>
+<p><strong>R8．jcmd 工具文档，Java 21</strong><br />
+<a
+href="https://docs.oracle.com/en/java/javase/21/docs/specs/man/jcmd.html"
+class="uri">https://docs.oracle.com/en/java/javase/21/docs/specs/man/jcmd.html</a><br />
+对应第 14 章。重点：线程转储、JFR 命令及目标进程限制。</p>
+<p><strong>R9．java.util.concurrent.atomic 包总览，Java
+21</strong><br />
+<a
+href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/atomic/package-summary.html"
+class="uri">https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/atomic/package-summary.html</a><br />
+对应第 7 章。重点：原子更新、内存效果及计数器的选型。</p>
+<p>进一步查阅（方法级别的细节以 API 文档为准）：</p>
+<ul>
+<li><a
+href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Thread.html">Thread
+API</a>：生命周期、中断、join。</li>
+<li><a
+href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/locks/ReentrantLock.html">ReentrantLock
+API</a>：公平性与 tryLock。</li>
+<li><a
+href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ConcurrentHashMap.html">ConcurrentHashMap
+API</a>：复合操作、弱一致迭代。</li>
+<li><a
+href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/atomic/LongAdder.html">LongAdder
+API</a>：sum 语义。</li>
+<li><a
+href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/ThreadLocal.html">ThreadLocal
+API</a>：绑定与 remove。</li>
+<li><a href="https://openjdk.org/projects/code-tools/jmh/">OpenJDK
+JMH</a> 与 <a
+href="https://openjdk.org/projects/code-tools/jcstress/">jcstress</a>：后续性能与并发正确性实验。</li>
+</ul>
+<p><strong>R10．JavaGuide：Java 并发常见面试题总结（上）</strong><br />
+<a
+href="https://javaguide.cn/java/concurrent/java-concurrent-questions-01.html"
+class="uri">https://javaguide.cn/java/concurrent/java-concurrent-questions-01.html</a><br />
+用来核对入门面试主题范围：线程与进程、生命周期、上下文切换、wait/sleep、线程安全与死锁。具体语义以官方规范为准。本书没有采用其中对所有
+Java 线程统一描述为操作系统直接调度的概括，虚拟线程需另行区分。</p>
+<p>建议检索词：<code>Java concurrency interview volatile synchronized thread pool</code>、<code>Java 高并发 线程池 拒绝策略 面试</code>、<code>JMM happens-before</code>。搜索结果用于发现主题，结论优先回到上面的规范与官方
+API 核对。</p>
+<footer>学习时先预测结果，再运行实验，最后用自己的话解释。<a href="#top">回到开头</a></footer>
+</main>
+<div class="progress" aria-hidden="true"><div id="progress"></div></div>
+<script>
+(() => {
+  'use strict';
+  const key = 'java-concurrency-reader-v1';
+  const read = name => { try { return localStorage.getItem(key + name); } catch { return null; } };
+  const save = (name, value) => { try { localStorage.setItem(key + name, value); } catch {} };
+  const root = document.documentElement;
+  const initialTheme = read('theme');
+  root.dataset.theme = initialTheme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  let size = Math.min(24, Math.max(16, Number(read('size')) || 18));
+  const setSize = value => { size = Math.min(24, Math.max(16, value)); root.style.setProperty('--size', size + 'px'); save('size', size); };
+  setSize(size);
+  document.querySelector('#smaller').onclick = () => setSize(size - 1);
+  document.querySelector('#larger').onclick = () => setSize(size + 1);
+  document.querySelector('#theme').onclick = () => { root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark'; save('theme', root.dataset.theme); };
+  const menu = document.querySelector('#menu');
+  const closeMenu = () => { document.body.classList.remove('menu-open'); menu.setAttribute('aria-expanded', 'false'); };
+  menu.onclick = () => { const open = document.body.classList.toggle('menu-open'); menu.setAttribute('aria-expanded', String(open)); };
+  document.addEventListener('keydown', event => { if (event.key === 'Escape') { closeMenu(); menu.focus(); } });
+  document.querySelector('#sidebar').addEventListener('click', event => { if (event.target.closest('a')) closeMenu(); });
+  const sections = [];
+  let current;
+  for (const node of document.querySelector('#book').children) {
+    if (/^H[12]$/.test(node.tagName)) { current = {id:node.id, title:node.textContent, text:''}; sections.push(current); }
+    if (current) current.text += node.textContent + '\n';
+  }
+  const search = document.querySelector('#search');
+  const results = document.querySelector('#results');
+  const status = document.querySelector('#search-status');
+  const nav = document.querySelector('nav');
+  search.addEventListener('input', () => {
+    const query = search.value.trim().toLocaleLowerCase();
+    results.replaceChildren(); results.hidden = !query; nav.hidden = !!query;
+    if (!query) { status.textContent = ''; return; }
+    const matches = sections.filter(section => section.text.toLocaleLowerCase().includes(query));
+    status.textContent = matches.length ? '找到 ' + matches.length + ' 个相关小节' : '未找到结果，请换一个关键词';
+    for (const section of matches) {
+      const li = document.createElement('li');
+      const a = document.createElement('a'); a.href = '#' + section.id; a.textContent = section.title;
+      const p = document.createElement('p');
+      const index = section.text.toLocaleLowerCase().indexOf(query);
+      p.textContent = '…' + section.text.slice(Math.max(0,index-30),index+100) + '…';
+      li.append(a,p); results.append(li);
+    }
+  });
+  const resume = document.querySelector('#resume');
+  const previous = read('position');
+  if (previous && Number(previous) > 100 && !location.hash) {
+    resume.hidden = false;
+    resume.onclick = () => { window.scrollTo(0, Number(previous)); resume.hidden = true; };
+  }
+  let timer;
+  window.addEventListener('scroll', () => {
+    const available = document.documentElement.scrollHeight - innerHeight;
+    document.querySelector('#progress').style.width = (available > 0 ? scrollY / available * 100 : 0) + '%';
+    clearTimeout(timer); timer = setTimeout(() => save('position', scrollY), 250);
+  }, {passive:true});
+  const links = new Map([...nav.querySelectorAll('a')].map(a => [decodeURIComponent(a.hash.slice(1)), a]));
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) if (entry.isIntersecting && links.has(entry.target.id)) {
+        for (const a of links.values()) a.removeAttribute('aria-current');
+        links.get(entry.target.id).setAttribute('aria-current','true');
+      }
+    }, {rootMargin:'-65px 0px -65% 0px'});
+    document.querySelectorAll('main>h1,main>h2').forEach(h => observer.observe(h));
+  }
+  document.querySelectorAll('pre').forEach(pre => {
+    const code = pre.querySelector('code'); if (!code) return;
+    const button = document.createElement('button'); button.type = 'button'; button.className = 'copy'; button.textContent = '复制代码';
+    button.onclick = async () => {
+      try { await navigator.clipboard.writeText(code.textContent); button.textContent = '已复制'; }
+      catch { const range = document.createRange(); range.selectNodeContents(code); const selection = getSelection(); selection.removeAllRanges(); selection.addRange(range); button.textContent = '已选中，请复制'; }
+      setTimeout(() => button.textContent = '复制代码', 2000);
+    };
+    pre.prepend(button);
+  });
+})();
+</script>
+</body>
+</html>
